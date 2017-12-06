@@ -1,10 +1,8 @@
 package map;
 
 import java.io.File;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -28,15 +26,13 @@ public class Map
 	 */
 	public Map(int size, int sizeW, String fileName)
 	{
-		_map = new int[size][sizeW];
-		_size=sizeW;
+		this._map = new int[size][sizeW];
+		this._size = sizeW;
 
 		try 
 		{
 			File file = new File(fileName);
-
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
 			Document doc = docBuilder.parse(file);
 
 			if (doc.hasChildNodes()) 
@@ -90,20 +86,5 @@ public class Map
 			}
 		}
 	}
-	
-	public static int getElementCountByName(String fileName,String name)
-	{
-		try{
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(fileName);
-		NodeList list = doc.getElementsByTagName(name);
-		return  list.getLength();
-		}
-		catch(Exception e)
-		{
-			System.out.println("exception: "+e.getMessage());
-			return -1;
-		}	
-	}
+
 }

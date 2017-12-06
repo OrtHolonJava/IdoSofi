@@ -6,12 +6,12 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 /**
- * The Img Class - 
+ * The Img Class (Represents an image)- 
  */
 public class Img
 {
 	private Image _image;
-	private int x, y, width, height;
+	private int _x, _y, _width, _height;
 	
 	/**
 	 * The Constructor Method - 
@@ -26,8 +26,8 @@ public class Img
 	{
 		_image = new ImageIcon(this.getClass().getClassLoader().getResource(path)).getImage(); 
 		
-		setImgCords(x, y);
-		setImgSize(width, height);
+		this.setImgCords(x, y);
+		this.setImgSize(width, height);
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public class Img
 	public void drawImg(Graphics g) 
 	{
 		Graphics2D g2d = (Graphics2D) g;
-        		g2d.drawImage(_image, x, y, width, height, null);
+       	g2d.drawImage(_image, _x, _y, _width, _height, null);
 	}
 	
 	/**
@@ -47,8 +47,8 @@ public class Img
 	 */
 	public void setImgCords(int x, int y)
 	{
-		this.x = x;
-		this.y = y;
+		this._x = x;
+		this._y = y;
 	}
 	
 	/**
@@ -58,8 +58,8 @@ public class Img
 	 */
 	public void setImgSize(int width, int height)
 	{
-		this.width = width;
-		this.height = height;
+		this._width = width;
+		this._height = height;
 	}
 	
 	/**
