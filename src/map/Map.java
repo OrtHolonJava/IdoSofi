@@ -15,31 +15,41 @@ public class Map
 {
 	private int _size;
 	private int _counter = 0;
-	private int[][] _map;
+	private int[][] _mapTerrain, _mapObj;
 	
 	/**
 	 * The Constructor Method -
 	 * Initializes an instance of the Map class.
+	 * Sets the map's terrain and objects matrix in accordance to the given XML files.
 	 * @param size
 	 * @param sizeW
-	 * @param fileName
+	 * @param terrainXmlFileName
+	 * @param objXmlFileName
 	 */
-	public Map(int size, int sizeW, String fileName)
+	public Map(int size, int sizeW, String terrainXmlFileName, String objXmlFileName)
 	{
-		this._map = new int[size][sizeW];
+		this._mapTerrain = new int[size][sizeW];
+		this._mapObj = new int[size][sizeW];
 		this._size = sizeW;
 
 		try 
 		{
-			File file = new File(fileName);
+			File terrainXml = new File(terrainXmlFileName), objXml = new File(objXmlFileName);
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = docBuilder.parse(file);
+			Document doc = docBuilder.parse(terrainXml);
 
 			if (doc.hasChildNodes()) 
 			{
-				readNode(doc.getChildNodes());
+				readNode(doc.getChildNodes(), this._mapTerrain);
 			}
-
+			
+			doc = docBuilder.parse(objXml);
+			this._counter = 0;
+			if (doc.hasChildNodes()) 
+			{
+				readNode(doc.getChildNodes(), this._mapObj);
+			}
+			
 		} 
 		catch (Exception e) 
 		{
@@ -48,18 +58,26 @@ public class Map
 	}
 	
 	/**
-	 * Method: Returns the map matrix.
+	 * Method: Returns the map's terrain matrix.
 	 */
-	public int[][] get_map() 
+	public int[][] getMapTerrain() 
 	{
-		return _map;
+		return this._mapTerrain;
+	}
+	
+	/**
+	 * Method: Returns the map's objects matrix.
+	 */
+	public int[][] getMapObj() 
+	{
+		return this._mapObj;
 	}
 	
 	/**
 	 * Method: Receives the XML file's node list and sets the map's matrix in accordance to its data.
 	 * @param nodeList
 	 */
-	private void readNode(NodeList nodeList) 
+	private void readNode(NodeList nodeList, int[][] map) 
 	{
 		for (int count = 0; count < nodeList.getLength(); count++) 
 		{
@@ -74,14 +92,14 @@ public class Map
 					for (int i = 0; i < nodeMap.getLength(); i++) 
 					{
 						Node node = nodeMap.item(i);
-						_map[_counter/_size][_counter%_size] = Integer.parseInt(node.getNodeValue()); 
+						map[_counter/_size][_counter%_size] = Integer.parseInt(node.getNodeValue()); 
 						_counter++;
 					}
 				}
 
 				if (tempNode.hasChildNodes()) 
 				{
-					readNode(tempNode.getChildNodes());
+					readNode(tempNode.getChildNodes(), map);
 				}
 			}
 		}
