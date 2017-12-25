@@ -68,11 +68,11 @@ public class MapPanel extends JPanel
 		 */
 		this._imgBackground.drawImg(g);
 		/**
-		 * Testing stuff~
+		 * Testings~
 		 */
 		g.translate(-MouseInfo.getPointerInfo().getLocation().x, -MouseInfo.getPointerInfo().getLocation().y);
 		Graphics2D g2d = (Graphics2D)g;
-		g2d.scale(1.3, 1.3);
+		//g2d.scale(1.3, 1.3);
 		/**
 		 * ~
 		 */
