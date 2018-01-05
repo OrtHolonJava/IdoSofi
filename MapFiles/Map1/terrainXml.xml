@@ -597,7 +597,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="6" />
     <Area Tile="7" />
@@ -634,7 +634,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="6" />
     <Area Tile="7" />
@@ -732,6 +732,28 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
+    <Area Tile="20" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="16" />
+    <Area Tile="17" />
+    <Area Tile="18" />
+    <Area Tile="19" />
+    <Area Tile="20" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
+    <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -747,29 +769,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="0" />
-    <Area Tile="16" />
-    <Area Tile="17" />
-    <Area Tile="18" />
-    <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -784,7 +784,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -1337,7 +1337,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -1612,7 +1612,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -1647,7 +1647,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -2095,7 +2095,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -2157,7 +2157,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
   </Line>
   <!--***************30*****************-->
@@ -2348,7 +2348,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -2400,7 +2400,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -2431,7 +2431,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -2678,7 +2678,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
     <Area Tile="0" />
@@ -2732,7 +2732,7 @@
     <Area Tile="17" />
     <Area Tile="18" />
     <Area Tile="19" />
-    <Area Tile="0" />
+    <Area Tile="20" />
     <Area Tile="0" />
     <Area Tile="0" />
   </Line>

@@ -1,6 +1,5 @@
 package map;
 import java.awt.Graphics;
-
 import javax.swing.JFrame;
 
 /**
