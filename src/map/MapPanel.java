@@ -35,12 +35,12 @@ public class MapPanel extends JPanel
 		 /**
 		  * Initializing the terrain tileset matrix.
 		  */
-		 this._terrainTileSet = new Img[3][3];
+		 this._terrainTileSet = new Img[4][5];
 		 for (int i = 0; i < _terrainTileSet.length; i++) 
 		 {
 			for (int j = 0; j < _terrainTileSet[0].length; j++) 
 			{
-				this._terrainTileSet[i][j] = new Img(String.format("images\\map%d\\terrainTiles\\%d.png", mapID, i * 3 + j), 0, 0, this._blockSize, this._blockSize);
+				this._terrainTileSet[i][j] = new Img(String.format("images\\map%d\\terrainTiles\\%d.png", mapID, i * 5 + j), 0, 0, this._blockSize, this._blockSize);
 			}
 		 }
 		 
@@ -85,8 +85,8 @@ public class MapPanel extends JPanel
 				 */
 				if (this._map.getMapTerrain()[i][j] != 0)
 				{
-					this._terrainTileSet[(_map.getMapTerrain()[i][j] - 1) / 3][(_map.getMapTerrain()[i][j] - 1) % 3].setImgCords(j * _blockSize, i * _blockSize);
-					this._terrainTileSet[(_map.getMapTerrain()[i][j] - 1) / 3][(_map.getMapTerrain()[i][j] - 1) % 3].drawImg(g);
+					this._terrainTileSet[(_map.getMapTerrain()[i][j] - 1) / 5][(_map.getMapTerrain()[i][j] - 1) % 5].setImgCords(j * _blockSize, i * _blockSize);
+					this._terrainTileSet[(_map.getMapTerrain()[i][j] - 1) / 5][(_map.getMapTerrain()[i][j] - 1) % 5].drawImg(g);
 				}
 				/**
 				 * Drawing the second layer (the objects) -
