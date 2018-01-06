@@ -15,7 +15,7 @@ public class Map
 {
 	private int _size;
 	private int _counter = 0;
-	private int[][] _mapTerrain, _mapObj;
+	private int[][] _mapTerrainTiles, _mapObjTiles; // Each cell value represents the tile image that should be drawn at its area.
 	
 	/**
 	 * The Constructor Method -
@@ -28,8 +28,8 @@ public class Map
 	 */
 	public Map(int size, int sizeW, String terrainXmlFileName, String objXmlFileName)
 	{
-		this._mapTerrain = new int[size][sizeW];
-		this._mapObj = new int[size][sizeW];
+		this._mapTerrainTiles = new int[size][sizeW];
+		this._mapObjTiles = new int[size][sizeW];
 		this._size = sizeW;
 
 		try 
@@ -40,14 +40,14 @@ public class Map
 
 			if (doc.hasChildNodes()) 
 			{
-				readNode(doc.getChildNodes(), this._mapTerrain);
+				readNode(doc.getChildNodes(), this._mapTerrainTiles);
 			}
 			
 			doc = docBuilder.parse(objXml);
 			this._counter = 0;
 			if (doc.hasChildNodes()) 
 			{
-				readNode(doc.getChildNodes(), this._mapObj);
+				readNode(doc.getChildNodes(), this._mapObjTiles);
 			}
 			
 		} 
@@ -58,19 +58,19 @@ public class Map
 	}
 	
 	/**
-	 * Method: Returns the map's terrain matrix.
+	 * Method: Returns the map's terrain tiles matrix.
 	 */
-	public int[][] getMapTerrain() 
+	public int[][] getMapTerrainTiles() 
 	{
-		return this._mapTerrain;
+		return this._mapTerrainTiles;
 	}
 	
 	/**
-	 * Method: Returns the map's objects matrix.
+	 * Method: Returns the map's object tiles matrix.
 	 */
-	public int[][] getMapObj() 
+	public int[][] getMapObjTiles() 
 	{
-		return this._mapObj;
+		return this._mapObjTiles;
 	}
 	
 	/**

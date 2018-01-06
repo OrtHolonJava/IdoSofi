@@ -13,10 +13,10 @@ public class MapFrame extends JFrame
 	 * The Constructor Method: 
 	 * Initializes an instance of the class.
 	 */
-	public MapFrame(int mapID ,int rows, int cols, int bSize)
+	public MapFrame(int mapID ,int rows, int cols)
 	{
 		this.setTitle("Link's Scrolls v0.1");
-		this._mapPanel = new MapPanel(mapID ,rows, cols, bSize);
+		this._mapPanel = new MapPanel(mapID ,rows, cols);
 		add(this._mapPanel);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setSize(1280, 720);
