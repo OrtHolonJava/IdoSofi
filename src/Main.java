@@ -1,7 +1,7 @@
 import map.*;
 
 /**
- * The Main Class of the Project -
+ * The Main Class of the Project (TEMP)-
  */
 public class Main 
 {
