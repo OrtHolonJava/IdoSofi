@@ -1,5 +1,7 @@
 package map;
 import javax.swing.JPanel;
+
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
@@ -11,7 +13,7 @@ import images.Img;
  */
 public class MapPanel extends JPanel
 {
-	private final int _blockSize = 30, terrainTSRows = 4, terrainTSWidth = 5, objTSLength = 3;
+	private final int terrainTSRows = 4, terrainTSWidth = 5, objTSLength = 3;
 	private int _rows, _columns;
 	private Img _imgBackground;
 	private Img[][] _terrainTileSet;
@@ -30,7 +32,12 @@ public class MapPanel extends JPanel
 	{
 		 this._rows = rows;
 		 this._columns = cols;
-		 this._imgBackground = new Img(String.format("images\\backgrounds\\bgMap%d.png", mapID), 0, 0, 1280, 720);
+		 this._imgBackground = new Img(String.format("images\\backgrounds\\bgMap%d.png", mapID), 0, 0, 1920, 1080);
+		 
+		/**
+		 * Initializing the instance of the map logic.
+		 */
+		this._map = new Map(this._rows, this._columns, String.format("MapFiles\\Map%d\\terrainXml.xml", mapID), String.format("MapFiles\\Map%d\\objXml.xml", mapID));
 		 
 		 /**
 		  * Initializing the terrain tileset matrix.
@@ -40,7 +47,7 @@ public class MapPanel extends JPanel
 		 {
 			for (int j = 0; j < terrainTSWidth; j++) 
 			{
-				this._terrainTileSet[i][j] = new Img(String.format("images\\maps\\map%d\\terrainTiles\\%d.png", mapID, i * terrainTSWidth + j), 0, 0, this._blockSize, this._blockSize);
+				this._terrainTileSet[i][j] = new Img(String.format("images\\maps\\map%d\\terrainTiles\\%d.png", mapID, i * terrainTSWidth + j), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
 			}
 		 }
 		 
@@ -50,13 +57,9 @@ public class MapPanel extends JPanel
 		this._objTileSet = new Img[objTSLength];
 		for (int i = 0; i < objTSLength; i++) 
 		{
-			this._objTileSet[i] = new Img(String.format("images\\maps\\map%d\\objTiles\\%d.png", mapID, i), 0, 0, this._blockSize, this._blockSize);
+			this._objTileSet[i] = new Img(String.format("images\\maps\\map%d\\objTiles\\%d.png", mapID, i), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
 		}
-		
-		/**
-		 * Initializing the instance of the map logic.
-		 */
-		this._map = new Map(this._rows, this._columns, String.format("MapFiles\\Map%d\\terrainXml.xml", mapID), String.format("MapFiles\\Map%d\\objXml.xml", mapID));
+	
 	}
 	
 	/**
@@ -83,6 +86,7 @@ public class MapPanel extends JPanel
 		 * Drawing the map - 
 		 */
 		drawMap(g);
+		markBlocks(g);
 	}
 	
 	/**
@@ -100,7 +104,7 @@ public class MapPanel extends JPanel
 				 */
 				if (this._map.getMapTerrainTiles()[i][j] != 0)
 				{
-					this._terrainTileSet[(_map.getMapTerrainTiles()[i][j] - 1) / terrainTSWidth][(_map.getMapTerrainTiles()[i][j] - 1) % terrainTSWidth].setImgCords(j * _blockSize, i * _blockSize);
+					this._terrainTileSet[(_map.getMapTerrainTiles()[i][j] - 1) / terrainTSWidth][(_map.getMapTerrainTiles()[i][j] - 1) % terrainTSWidth].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
 					this._terrainTileSet[(_map.getMapTerrainTiles()[i][j] - 1) / terrainTSWidth][(_map.getMapTerrainTiles()[i][j] - 1) % terrainTSWidth].drawImg(g);
 				}
 				/**
@@ -108,11 +112,30 @@ public class MapPanel extends JPanel
 				 */
 				if (this._map.getMapObjTiles()[i][j] != 0)
 				{
-					this._objTileSet[_map.getMapObjTiles()[i][j] - 1].setImgCords(j * _blockSize, i * _blockSize);
+					this._objTileSet[_map.getMapObjTiles()[i][j] - 1].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
 					this._objTileSet[_map.getMapObjTiles()[i][j] - 1].drawImg(g);
 				}
 				
 			}
+		}
+	}
+	
+	/**
+	 * Method: Marks the logical blocks onto the panel.
+	 */
+	public void markBlocks(Graphics g)
+	{
+		for (Block b : this._map.getBlockList()) 
+		{ 
+			if (b.getType() == BlockType.Terrain)
+			{
+				g.setColor(Color.GREEN);
+			}
+			else
+			{
+				g.setColor(Color.RED);				
+			}
+			g.drawRect(b.getRectangle().x, b.getRectangle().y, b.getRectangle().width, b.getRectangle().height);
 		}
 	}
 

@@ -19,9 +19,12 @@ public class MapFrame extends JFrame
 		this._mapPanel = new MapPanel(mapID ,rows, cols);
 		add(this._mapPanel);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    setSize(1280, 720);
-	    setVisible(true);
+	    //setSize(1280, 720);
 	    setResizable(false);
+	    setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    setUndecorated(true);
+	    setVisible(true);
+	    
 	    inGame();
 	}
 	
