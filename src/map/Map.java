@@ -16,8 +16,11 @@ public class Map
 {
 	private int _size;
 	private int _counter = 0;
-	private int[][] _mapTerrainTiles, _mapObjTiles; // Each cell value represents the tile image that should be drawn at its area (graphical purpose).
-	private List<Block> _mapBlocks; // Each node represents an 'actual' block in the map (logical purpose).
+	
+	// Each cell value represents the tile image that should be drawn at its area (graphical purpose).
+	// Each node represents an 'actual' block in the map (logical purpose).
+	private Block[][] _mapMatrix;
+	
 	private final int _blockSize = 30;
 	
 	/**
@@ -31,9 +34,7 @@ public class Map
 	 */
 	public Map(int size, int sizeW, String terrainXmlFileName, String objXmlFileName)
 	{
-		this._mapTerrainTiles = new int[size][sizeW];
-		this._mapObjTiles = new int[size][sizeW];
-		this._mapBlocks = new ArrayList<Block>();
+		this._mapMatrix = new Block[size][sizeW];
 		this._size = sizeW;
 		
 		/**
@@ -47,47 +48,21 @@ public class Map
 
 			if (doc.hasChildNodes()) 
 			{
-				readNode(doc.getChildNodes(), this._mapTerrainTiles);
+				readNode(doc.getChildNodes(), this._mapMatrix, BlockType.Terrain);
 			}
 			
 			doc = docBuilder.parse(objXml);
 			this._counter = 0;
 			if (doc.hasChildNodes()) 
 			{
-				readNode(doc.getChildNodes(), this._mapObjTiles);
+				readNode(doc.getChildNodes(), this._mapMatrix, BlockType.Ladder);
 			}
 		} 
 		catch (Exception e) 
 		{
 			System.out.println(e.getMessage());
 		}
-		
-		this.initMapBlocks();
-		System.out.println(this._mapBlocks.toString());
-	}
 	
-	/**
-	 * Method: Initializes the map blocks linked list.
-	 */
-	private void initMapBlocks()
-	{
-		/**
-		 * Extractment of terrain and ladder blocks -
-		 */
-		for (int i = 0; i < _mapTerrainTiles.length; i++)
-		{
-			for (int j = 0; j < _mapTerrainTiles[0].length; j++) 
-			{
-				if ((_mapTerrainTiles[i][j] - 1) / 5 == 0 && _mapTerrainTiles[i][j] != 0) // Top layer of the tileset
-				{
-					this._mapBlocks.add(new Block(j * _blockSize, i * _blockSize, _blockSize, BlockType.Terrain));
-				}
-				if (_mapObjTiles[i][j] != 0)
-				{
-					this._mapBlocks.add(new Block(j * _blockSize, i * _blockSize, _blockSize, BlockType.Ladder));
-				}
-			}
-		}
 	}
 	
 	/**
@@ -99,34 +74,19 @@ public class Map
 	}
 	
 	/**
-	 * Method: Returns the map's terrain tiles matrix.
+	 * Method: Returns the map's blocks matrix.
 	 */
-	public int[][] getMapTerrainTiles() 
+	public Block[][] getMapMatrix() 
 	{
-		return this._mapTerrainTiles;
+		return this._mapMatrix;
 	}
 	
-	/**
-	 * Method: Returns the map's object tiles matrix.
-	 */
-	public int[][] getMapObjTiles() 
-	{
-		return this._mapObjTiles;
-	}
-	
-	/**
-	 * Method: Returns the map's block list.
-	 */
-	public List<Block> getBlockList()
-	{
-		return this._mapBlocks;
-	}
 	
 	/**
 	 * Method: Receives the XML file's node list and sets the map's matrix in accordance to its data.
 	 * @param nodeList
 	 */
-	private void readNode(NodeList nodeList, int[][] map) 
+	private void readNode(NodeList nodeList, Block[][] map, BlockType mode) 
 	{
 		for (int count = 0; count < nodeList.getLength(); count++) 
 		{
@@ -141,14 +101,25 @@ public class Map
 					for (int i = 0; i < nodeMap.getLength(); i++) 
 					{
 						Node node = nodeMap.item(i);
-						map[_counter/_size][_counter%_size] = Integer.parseInt(node.getNodeValue()); 
+						if (Integer.parseInt(node.getNodeValue()) != 0)
+						{
+							if (map[_counter/_size][_counter%_size] == null)
+							{
+								map[_counter/_size][_counter%_size] = new Block(_counter % _size * _blockSize, _counter / _size * _blockSize, _blockSize, Integer.parseInt(node.getNodeValue()), mode);
+							}
+							else
+							{
+								map[_counter/_size][_counter%_size].addTile(Integer.parseInt(node.getNodeValue()));
+								map[_counter/_size][_counter%_size].setType(mode);
+							}
+						}
 						_counter++;
 					}
 				}
 
 				if (tempNode.hasChildNodes()) 
 				{
-					readNode(tempNode.getChildNodes(), map);
+					readNode(tempNode.getChildNodes(), map, mode);
 				}
 			}
 		}

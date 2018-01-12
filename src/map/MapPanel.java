@@ -13,7 +13,7 @@ import images.Img;
  */
 public class MapPanel extends JPanel
 {
-	private final int terrainTSRows = 4, terrainTSWidth = 5, objTSLength = 3;
+	private final int _terrainTSRows = 4, _terrainTSWidth = 5, _objTSLength = 3;
 	private int _rows, _columns;
 	private Img _imgBackground;
 	private Img[][] _terrainTileSet;
@@ -42,20 +42,20 @@ public class MapPanel extends JPanel
 		 /**
 		  * Initializing the terrain tileset matrix.
 		  */
-		 this._terrainTileSet = new Img[terrainTSRows][terrainTSWidth];
-		 for (int i = 0; i < terrainTSRows; i++) 
+		 this._terrainTileSet = new Img[_terrainTSRows][_terrainTSWidth];
+		 for (int i = 0; i < _terrainTSRows; i++) 
 		 {
-			for (int j = 0; j < terrainTSWidth; j++) 
+			for (int j = 0; j < _terrainTSWidth; j++) 
 			{
-				this._terrainTileSet[i][j] = new Img(String.format("images\\maps\\map%d\\terrainTiles\\%d.png", mapID, i * terrainTSWidth + j), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
+				this._terrainTileSet[i][j] = new Img(String.format("images\\maps\\map%d\\terrainTiles\\%d.png", mapID, i * _terrainTSWidth + j), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
 			}
 		 }
 		 
 		/**
 		 * Initializing the objects tileset matrix.
 		 */
-		this._objTileSet = new Img[objTSLength];
-		for (int i = 0; i < objTSLength; i++) 
+		this._objTileSet = new Img[_objTSLength];
+		for (int i = 0; i < _objTSLength; i++) 
 		{
 			this._objTileSet[i] = new Img(String.format("images\\maps\\map%d\\objTiles\\%d.png", mapID, i), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
 		}
@@ -80,13 +80,13 @@ public class MapPanel extends JPanel
 		 */
 		g.translate(-MouseInfo.getPointerInfo().getLocation().x, -MouseInfo.getPointerInfo().getLocation().y);
 		Graphics2D g2d = (Graphics2D)g;
-		g2d.scale(1, 1);
+		g2d.scale(2, 2);
 		
 		/**
 		 * Drawing the map - 
 		 */
-		drawMap(g);
-		markBlocks(g);
+		this.drawMap(g);
+		this.markBlocks(g);
 	}
 	
 	/**
@@ -100,20 +100,18 @@ public class MapPanel extends JPanel
 			for (int j = 0; j < _columns; j++) 
 			{
 				/**
-				 * Drawing the first layer (the terrain) -
+				 * Drawing the ladder and terrain blocks of the map (first and second layered tiles)-
 				 */
-				if (this._map.getMapTerrainTiles()[i][j] != 0)
+				if (this._map.getMapMatrix()[i][j] != null)
 				{
-					this._terrainTileSet[(_map.getMapTerrainTiles()[i][j] - 1) / terrainTSWidth][(_map.getMapTerrainTiles()[i][j] - 1) % terrainTSWidth].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
-					this._terrainTileSet[(_map.getMapTerrainTiles()[i][j] - 1) / terrainTSWidth][(_map.getMapTerrainTiles()[i][j] - 1) % terrainTSWidth].drawImg(g);
-				}
-				/**
-				 * Drawing the second layer (the objects) -
-				 */
-				if (this._map.getMapObjTiles()[i][j] != 0)
-				{
-					this._objTileSet[_map.getMapObjTiles()[i][j] - 1].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
-					this._objTileSet[_map.getMapObjTiles()[i][j] - 1].drawImg(g);
+					if (this._map.getMapMatrix()[i][j].getType() == BlockType.Terrain)
+					{
+						this.drawTerrainBlock(g, i, j);
+					}
+					else if (this._map.getMapMatrix()[i][j].getType() == BlockType.Ladder)
+					{
+						this.drawObjBlock(g, i, j);
+					}
 				}
 				
 			}
@@ -121,21 +119,57 @@ public class MapPanel extends JPanel
 	}
 	
 	/**
+	 * Method: Draws the given block onto the panel, assuming its tile values refer to the terrain tileset -
+	 * @param g
+	 */
+	public void drawTerrainBlock(Graphics g, int i, int j)
+	{
+		this._terrainTileSet[(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) / _terrainTSWidth][(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) % _terrainTSWidth].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
+		this._terrainTileSet[(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) / _terrainTSWidth][(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) % _terrainTSWidth].drawImg(g);
+	}
+	
+	/**
+	 * Method: Draws the given block onto the panel, assuming its tile values refer to the object tileset (an obj block could be double-layered) -
+	 * @param g
+	 */
+	public void drawObjBlock(Graphics g, int i, int j)
+	{
+		if (_map.getMapMatrix()[i][j].getTileList().size() == 1)
+		{
+			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(0) - 1].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
+			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(0) - 1].drawImg(g);
+		}
+		else
+		{
+			drawTerrainBlock(g, i, j);
+			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(1) - 1].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
+			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(1) - 1].drawImg(g);
+		}
+	}
+	
+	
+	/**
 	 * Method: Marks the logical blocks onto the panel.
 	 */
 	public void markBlocks(Graphics g)
 	{
-		for (Block b : this._map.getBlockList()) 
+		for (Block[] bArr : this._map.getMapMatrix()) 
 		{ 
-			if (b.getType() == BlockType.Terrain)
+			for (Block b : bArr) 
 			{
-				g.setColor(Color.GREEN);
+				if (b != null)
+				{
+					if (b.getType() == BlockType.Terrain)
+					{
+						g.setColor(Color.GREEN);
+					}
+					else
+					{
+						g.setColor(Color.RED);				
+					}
+					g.drawRect(b.getRectangle().x, b.getRectangle().y, b.getRectangle().width, b.getRectangle().height);
+				}
 			}
-			else
-			{
-				g.setColor(Color.RED);				
-			}
-			g.drawRect(b.getRectangle().x, b.getRectangle().y, b.getRectangle().width, b.getRectangle().height);
 		}
 	}
 

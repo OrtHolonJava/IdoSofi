@@ -1,5 +1,8 @@
 package map;
+import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Block Class - 
@@ -8,6 +11,7 @@ public class Block
 {
 	private BlockType _type;
 	private Rectangle _rectangle;
+	private List<Integer> _tiles; 
 	
 	/**
 	 * The Constructor Method - Receives values for each attribute and initializes an instance of the class.
@@ -16,10 +20,12 @@ public class Block
 	 * @param size
 	 * @param type
 	 */
-	public Block(int x, int y, int size, BlockType type)
+	public Block(int x, int y, int size, int tile, BlockType type)
 	{
 		this._rectangle = new Rectangle(x, y, size, size);
 		this._type = type;
+		this._tiles = new ArrayList<Integer>();
+		this._tiles.add(tile);
 	}
 	
 	/**
@@ -45,6 +51,19 @@ public class Block
 		_rectangle = rectangle;
 	}
 	
+	public List<Integer> getTileList()
+	{
+		return this._tiles;
+	}
+	
+	public void addTile(int tile)
+	{
+		this._tiles.add(tile);
+	}
+	
+	/**
+	 * The toString Method
+	 */
 	@Override
 	public String toString() 
 	{
