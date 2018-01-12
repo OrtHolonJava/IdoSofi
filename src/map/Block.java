@@ -45,6 +45,15 @@ public class Block
 	{
 		return _rectangle;
 	}
+	
+	/**
+	 * The size of the tiles list is another indication to the block's full type.
+	 * If a Ladder block is double 
+	 */
+	public int getLayers()
+	{
+		return this._tiles.size();
+	}
 
 	public void setRectangle(Rectangle rectangle)
 	{
