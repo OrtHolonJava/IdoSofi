@@ -6,5 +6,5 @@ package map;
  */
 public enum BlockType 
 {
-	Terrain, Ladder;
+	Terrain, Object;
 }

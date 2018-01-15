@@ -1,6 +1,6 @@
 package characters;
 
-public class Character 
+public class Character extends LivingObject 
 {
 	
 }

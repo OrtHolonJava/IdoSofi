@@ -80,7 +80,7 @@ public class MapPanel extends JPanel
 		 */
 		g.translate(-MouseInfo.getPointerInfo().getLocation().x, -MouseInfo.getPointerInfo().getLocation().y);
 		Graphics2D g2d = (Graphics2D)g;
-		g2d.scale(2, 2);
+		g2d.scale(1, 1);
 		
 		/**
 		 * Drawing the map - 
@@ -95,26 +95,21 @@ public class MapPanel extends JPanel
 	 */
 	public void drawMap(Graphics g)
 	{
-		for (int i = 0; i < _rows; i++) 
+		Block tb;
+		/**
+		 * Drawing the terrain blocks of the map (first layer of tiles)-
+		 */
+		for (int key : _map.getTerrainHashMap().keySet()) 
 		{
-			for (int j = 0; j < _columns; j++) 
-			{
-				/**
-				 * Drawing the ladder and terrain blocks of the map (first and second layered tiles)-
-				 */
-				if (this._map.getMapMatrix()[i][j] != null)
-				{
-					if (this._map.getMapMatrix()[i][j].getType() == BlockType.Terrain)
-					{
-						this.drawTerrainBlock(g, i, j);
-					}
-					else if (this._map.getMapMatrix()[i][j].getType() == BlockType.Ladder)
-					{
-						this.drawObjBlock(g, i, j);
-					}
-				}
-				
-			}
+			this.drawTerrainBlock(g, key);
+		}
+		
+		/**
+		 * Drawing the object blocks of the map (second layer of tiles)-
+		 */
+		for (int key : _map.getObjHashMap().keySet()) 
+		{
+			this.drawObjBlock(g, key);
 		}
 	}
 	
@@ -122,54 +117,43 @@ public class MapPanel extends JPanel
 	 * Method: Draws the given block onto the panel, assuming its tile values refer to the terrain tileset -
 	 * @param g
 	 */
-	public void drawTerrainBlock(Graphics g, int i, int j)
+	public void drawTerrainBlock(Graphics g, int blockKey)
 	{
-		this._terrainTileSet[(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) / _terrainTSWidth][(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) % _terrainTSWidth].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
-		this._terrainTileSet[(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) / _terrainTSWidth][(_map.getMapMatrix()[i][j].getTileList().get(0) - 1) % _terrainTSWidth].drawImg(g);
+		int tile = _map.getTerrainHashMap().get(blockKey).getTile() - 1;		
+		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].setImgCords((blockKey % _columns) * _map.getBlockSize(), (blockKey / _columns) * _map.getBlockSize());
+		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].drawImg(g);
 	}
 	
 	/**
-	 * Method: Draws the given block onto the panel, assuming its tile values refer to the object tileset (an obj block could be double-layered) -
+	 * Method: Draws the given block onto the panel, assuming its tile values refer to the object tileset -
 	 * @param g
 	 */
-	public void drawObjBlock(Graphics g, int i, int j)
+	public void drawObjBlock(Graphics g, int blockKey)
 	{
-		if (_map.getMapMatrix()[i][j].getTileList().size() == 1)
-		{
-			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(0) - 1].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
-			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(0) - 1].drawImg(g);
-		}
-		else
-		{
-			drawTerrainBlock(g, i, j);
-			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(1) - 1].setImgCords(j * this._map.getBlockSize(), i * this._map.getBlockSize());
-			this._objTileSet[_map.getMapMatrix()[i][j].getTileList().get(1) - 1].drawImg(g);
-		}
+		int tile = _map.getObjHashMap().get(blockKey).getTile() - 1;		
+		this._objTileSet[tile].setImgCords((blockKey % _columns) * _map.getBlockSize(), (blockKey / _columns) * _map.getBlockSize());
+		this._objTileSet[tile].drawImg(g);
 	}
-	
 	
 	/**
 	 * Method: Marks the logical blocks onto the panel.
 	 */
 	public void markBlocks(Graphics g)
 	{
-		for (Block[] bArr : this._map.getMapMatrix()) 
-		{ 
-			for (Block b : bArr) 
-			{
-				if (b != null)
-				{
-					if (b.getType() == BlockType.Terrain)
-					{
-						g.setColor(Color.GREEN);
-					}
-					else
-					{
-						g.setColor(Color.RED);				
-					}
-					g.drawRect(b.getRectangle().x, b.getRectangle().y, b.getRectangle().width, b.getRectangle().height);
-				}
-			}
+		Block tb;
+		
+		g.setColor(Color.GREEN);
+		for (int key : _map.getTerrainHashMap().keySet()) 
+		{
+			tb = _map.getTerrainHashMap().get(key);
+			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
+		}
+		
+		g.setColor(Color.RED);
+		for (int key : _map.getObjHashMap().keySet()) 
+		{
+			tb = _map.getObjHashMap().get(key);
+			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
 		}
 	}
 
