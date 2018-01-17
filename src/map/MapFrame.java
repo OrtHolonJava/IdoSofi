@@ -1,5 +1,5 @@
 package map;
-import java.awt.Graphics;
+import java.util.Timer;
 import javax.swing.JFrame;
 
 /**
@@ -17,6 +17,8 @@ public class MapFrame extends JFrame
 	{
 		this.setTitle("Link's Scrolls v0.1");
 		this._mapPanel = new MapPanel(mapID ,rows, cols);
+		Timer gameTimer = new Timer();
+		GameLoop gLoop = new GameLoop(this._mapPanel);
 		add(this._mapPanel);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    //setSize(1280, 720);
@@ -24,15 +26,6 @@ public class MapFrame extends JFrame
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);
 	    setUndecorated(true);
 	    setVisible(true);
-	    
-	    inGame();
-	}
-	
-	public void inGame()
-	{
-		while (true)
-		{
-			this._mapPanel.repaint();
-		}
+	    gameTimer.schedule(gLoop, 0, 1000 / 60); //new timer at 60 fps, the timing mechanism
 	}
 }

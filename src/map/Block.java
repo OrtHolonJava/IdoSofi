@@ -1,9 +1,5 @@
 package map;
-import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
-
 import characters.LivingObject;
 
 /**
@@ -11,8 +7,8 @@ import characters.LivingObject;
  */
 public abstract class Block
 {
-	private Rectangle _rectangle;
-	private int _tile; 
+	protected Rectangle _rectangle;
+	protected int _tile; 
 	
 	/**
 	 * The Constructor Method - Receives values for each attribute and initializes an instance of the class.

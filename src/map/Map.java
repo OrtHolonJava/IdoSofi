@@ -1,8 +1,6 @@
 package map;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -15,7 +13,7 @@ import org.w3c.dom.NodeList;
  */
 public class Map 
 {
-	private int _size;
+	private int _sizeW, _sizeH;
 	private int _counter = 0;
 	private final int _blockSize = 30;
 	
@@ -38,7 +36,8 @@ public class Map
 		//this._mapMatrix = new Block[size][sizeW];
 		this._terrainHashMap = new HashMap<Integer, TerrainBlock>();
 		this._objHashMap = new HashMap<Integer, ObjectBlock>();
-		this._size = sizeW;
+		this._sizeW = sizeW;
+		this._sizeH = size;
 		
 		/**
 		 * Reading the map's XML file and extracting its data to the matrices.
@@ -91,11 +90,11 @@ public class Map
 						{
 							if (mode == BlockType.Terrain)
 							{
-								this._terrainHashMap.put(_counter, new TerrainBlock(_counter % _size * _blockSize, _counter / _size * _blockSize, _blockSize, Integer.parseInt(node.getNodeValue())));
+								this._terrainHashMap.put(_counter, new TerrainBlock(_counter % _sizeW * _blockSize, _counter / _sizeW * _blockSize, _blockSize, Integer.parseInt(node.getNodeValue()), Integer.parseInt(node.getNodeValue()) < 5));
 							}
 							else 
 							{
-								this._objHashMap.put(_counter, new ObjectBlock(_counter % _size * _blockSize, _counter / _size * _blockSize, _blockSize, Integer.parseInt(node.getNodeValue())));
+								this._objHashMap.put(_counter, new ObjectBlock(_counter % _sizeW * _blockSize, _counter / _sizeW * _blockSize, _blockSize, Integer.parseInt(node.getNodeValue())));
 							}
 						}
 						this._counter++;
@@ -136,5 +135,15 @@ public class Map
 	public int getBlockSize()
 	{
 		return this._blockSize;
+	}
+	
+	public int getMapWidth()
+	{
+		return this._sizeW;
+	}
+	
+	public int getMapHeight()
+	{
+		return this._sizeH;
 	}
 }

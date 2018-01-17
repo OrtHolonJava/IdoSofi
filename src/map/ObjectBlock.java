@@ -1,5 +1,4 @@
 package map;
-import java.awt.Rectangle;
 import characters.LivingObject;
 
 public class ObjectBlock extends Block

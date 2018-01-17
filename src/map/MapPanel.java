@@ -1,10 +1,16 @@
 package map;
 import javax.swing.JPanel;
 
+import characters.GameCharacter;
+import characters.PlayerCamera;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 
 import images.Img;
 
@@ -13,12 +19,14 @@ import images.Img;
  */
 public class MapPanel extends JPanel
 {
-	private final int _terrainTSRows = 4, _terrainTSWidth = 5, _objTSLength = 3;
+	private final int _terrainTSRows = 4, _terrainTSWidth = 5, _objTSLength = 3, _charBoxWidth = 30, _charBoxHeight = 65;
 	private int _rows, _columns;
 	private Img _imgBackground;
 	private Img[][] _terrainTileSet;
 	private Img[] _objTileSet;
 	private Map _map;
+	private GameCharacter _playerChar;
+	private PlayerCamera _playerCam;
 	
 	/**
 	 * The Constructor Method - 
@@ -59,7 +67,25 @@ public class MapPanel extends JPanel
 		{
 			this._objTileSet[i] = new Img(String.format("images\\maps\\map%d\\objTiles\\%d.png", mapID, i), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
 		}
+		
+		/**
+		 * Initializing character-related instances.
+		 */
+		this._playerChar = new GameCharacter(50, 100, _charBoxWidth, _charBoxHeight);
+		this._playerCam = new PlayerCamera(this._playerChar, 2f, this);
+	}
 	
+	public void checkTerrainCollision()
+	{
+		Point charFeet = new Point(this._playerChar.getObjBox().x / this._map.getBlockSize(), (this._playerChar.getObjBox().y +  this._playerChar.getObjBox().height) / this._map.getBlockSize());
+		if (this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())) != null)
+		{
+			this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())).affectLivingObj(this._playerChar);
+		}
+		else
+		{
+			this._playerChar.setGravity(true);
+		}
 	}
 	
 	/**
@@ -78,15 +104,22 @@ public class MapPanel extends JPanel
 		/**
 		 * Testings - 
 		 */
-		g.translate(-MouseInfo.getPointerInfo().getLocation().x, -MouseInfo.getPointerInfo().getLocation().y);
 		Graphics2D g2d = (Graphics2D)g;
-		g2d.scale(1, 1);
+		g2d.scale(this._playerCam.getScale(), this._playerCam.getScale());
+		g.translate(this._playerCam.getX(), this._playerCam.getY());
 		
 		/**
 		 * Drawing the map - 
 		 */
 		this.drawMap(g);
 		this.markBlocks(g);
+		
+		/**
+		 * Drawing the characters - 
+		 */
+		this.drawCharacter(g, this._playerChar);
+		this._playerChar.setMovement();
+		this._playerCam.setPosition();
 	}
 	
 	/**
@@ -95,7 +128,6 @@ public class MapPanel extends JPanel
 	 */
 	public void drawMap(Graphics g)
 	{
-		Block tb;
 		/**
 		 * Drawing the terrain blocks of the map (first layer of tiles)-
 		 */
@@ -111,6 +143,16 @@ public class MapPanel extends JPanel
 		{
 			this.drawObjBlock(g, key);
 		}
+	}
+	
+	/**
+	 * Method: Draws the given character onto the panel.
+	 * @param g
+	 */
+	public void drawCharacter(Graphics g, GameCharacter chara)
+	{
+		g.setColor(Color.pink);
+		g.fillRect(chara.getObjBox().x, chara.getObjBox().y, chara.getObjBox().width, chara.getObjBox().height);
 	}
 	
 	/**
@@ -155,6 +197,11 @@ public class MapPanel extends JPanel
 			tb = _map.getObjHashMap().get(key);
 			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
 		}
+	}
+
+	public Map getMap()
+	{
+		return _map;
 	}
 
 }
