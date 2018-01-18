@@ -9,7 +9,7 @@ public class PlayerCamera
 {
 	private int _x, _y;
 	private float _scale;
-	private final int _alpha = 10;
+	private final int _alpha = 25;
 	private GameCharacter _char;
 	private MapPanel _panel;
 	

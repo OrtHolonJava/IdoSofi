@@ -1,16 +1,11 @@
 package map;
 import javax.swing.JPanel;
-
 import characters.GameCharacter;
 import characters.PlayerCamera;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
 
 import images.Img;
 
@@ -27,6 +22,7 @@ public class MapPanel extends JPanel
 	private Map _map;
 	private GameCharacter _playerChar;
 	private PlayerCamera _playerCam;
+	private boolean _isRunning;
 	
 	/**
 	 * The Constructor Method - 
@@ -73,6 +69,16 @@ public class MapPanel extends JPanel
 		 */
 		this._playerChar = new GameCharacter(50, 100, _charBoxWidth, _charBoxHeight);
 		this._playerCam = new PlayerCamera(this._playerChar, 2f, this);
+		
+		/**
+		 * The game is now at a running state.
+		 */
+		this._isRunning = true;
+	}
+	
+	public boolean isRunning()
+	{
+		return this._isRunning;
 	}
 	
 	public void checkTerrainCollision()
@@ -82,10 +88,19 @@ public class MapPanel extends JPanel
 		{
 			this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())).affectLivingObj(this._playerChar);
 		}
-		else
+		else // De-effecting the block's effect (to be done in the block class, TEMP)
 		{
-			this._playerChar.setGravity(true);
+			this._playerChar.setCollidedState(false);
 		}
+	}
+	
+	/**
+	 * Method: Sets the current logical state of the game.
+	 */
+	public void setLogic()
+	{
+		this._playerChar.setMovement();
+		this.checkTerrainCollision();
 	}
 	
 	/**
@@ -106,20 +121,19 @@ public class MapPanel extends JPanel
 		 */
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.scale(this._playerCam.getScale(), this._playerCam.getScale());
-		g.translate(this._playerCam.getX(), this._playerCam.getY());
+		g2d.translate(this._playerCam.getX(), this._playerCam.getY());
 		
 		/**
 		 * Drawing the map - 
 		 */
 		this.drawMap(g);
-		this.markBlocks(g);
+		//this.markBlocks(g);
 		
 		/**
 		 * Drawing the characters - 
 		 */
-		this.drawCharacter(g, this._playerChar);
-		this._playerChar.setMovement();
 		this._playerCam.setPosition();
+		this.drawCharacter(g, this._playerChar);
 	}
 	
 	/**

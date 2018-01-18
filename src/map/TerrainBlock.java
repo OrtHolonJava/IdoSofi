@@ -1,5 +1,4 @@
 package map;
-import characters.GameCharacter;
 import characters.LivingObject;
 
 public class TerrainBlock extends Block
@@ -18,7 +17,7 @@ public class TerrainBlock extends Block
 	{
 		if (this._isFloor)
 		{
-			obj.setGravity(false);
+			obj.setCollidedState(true);
 			obj.setPosition(obj.getObjBox().x, this._rectangle.y - (int)(obj.getObjBox().getHeight()) + this._feetPositioning);
 		}
 	}

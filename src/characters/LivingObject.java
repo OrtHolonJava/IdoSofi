@@ -19,7 +19,8 @@ public abstract class LivingObject implements Gravity
 	}
 	
 	public abstract void setMovement();
-
+	public abstract void setCollidedState(boolean val);
+	
 	/**
 	 * Getters and setters - 
 	 */

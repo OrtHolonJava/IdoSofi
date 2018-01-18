@@ -2,7 +2,7 @@ package characters;
 
 public class GameCharacter extends LivingObject 
 {
-	private boolean _isRight;
+	private boolean _isRight, _isCollided;
 	private CharacterState _currState;
 	
 	public GameCharacter(int x, int y, int width, int height) 
@@ -10,6 +10,7 @@ public class GameCharacter extends LivingObject
 		super(x, y, width, height);
 		this._isRight = this._isGravityApplied = true;
 		this._currState = CharacterState.Jumping;
+		this._isCollided = false;
 		this._movementX = 0; this._movementY = -15;
 	}
 	
@@ -29,7 +30,7 @@ public class GameCharacter extends LivingObject
 	public void setMovement()
 	{
 		this.applyGravity();
-		this._objBox.x += this._movementX;
+		this._objBox.x += this._movementX + 10;
 		this._objBox.y += this._movementY;
 	}
 	
@@ -52,20 +53,43 @@ public class GameCharacter extends LivingObject
 	@Override
 	public void applyGravity()
 	{
-		// TODO Auto-generated method stub
-		if (this._isGravityApplied)
+		if (this._isCollided)
 		{
+			this._movementY = 0;
+			this._isGravityApplied = false;
+		}
+		else
+		{
+			this._isGravityApplied = true;
 			if (this._movementY < this._maxGForce)
 			{
 				this._movementY += 1;
 			}
 			this._currState = CharacterState.Falling;
 		}
-		else
-		{
-			this._movementY = 0;
-			this._currState = CharacterState.Standing;
-		}
 	}
+	
+	public boolean isRight() 
+	{
+		return _isRight;
+	}
+
+	public void setRight(boolean isRight) 
+	{
+		_isRight = isRight;
+	}
+
+	public boolean isCollided() 
+	{
+		return _isCollided;
+	}
+
+	@Override
+	public void setCollidedState(boolean val) 
+	{
+		this._isCollided = val;
+	}
+	
+	
 
 }
