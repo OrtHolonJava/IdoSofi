@@ -2,10 +2,15 @@ package map;
 import javax.swing.JPanel;
 import characters.GameCharacter;
 import characters.PlayerCamera;
+import characters.PlayerKeyListener;
+
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import images.Img;
 
@@ -22,6 +27,7 @@ public class MapPanel extends JPanel
 	private Map _map;
 	private GameCharacter _playerChar;
 	private PlayerCamera _playerCam;
+	private PlayerKeyListener _keyListener;
 	private boolean _isRunning;
 	
 	/**
@@ -37,7 +43,7 @@ public class MapPanel extends JPanel
 		 this._rows = rows;
 		 this._columns = cols;
 		 this._imgBackground = new Img(String.format("images\\backgrounds\\bgMap%d.png", mapID), 0, 0, 1920, 1080);
-		 
+		 this.setFocusable(true);
 		/**
 		 * Initializing the instance of the map logic.
 		 */
@@ -69,6 +75,8 @@ public class MapPanel extends JPanel
 		 */
 		this._playerChar = new GameCharacter(50, 100, _charBoxWidth, _charBoxHeight);
 		this._playerCam = new PlayerCamera(this._playerChar, 2f, this);
+		this._keyListener = new PlayerKeyListener(this._playerChar);
+		this.addKeyListener(this._keyListener);
 		
 		/**
 		 * The game is now at a running state.
@@ -88,6 +96,10 @@ public class MapPanel extends JPanel
 		{
 			this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())).affectLivingObj(this._playerChar);
 		}
+		else if (this._map.getTerrainHashMap().get((int)(charFeet.getX() + 1 + charFeet.getY() * this._map.getMapWidth())) != null && this._playerChar.getObjBox().x >= 0) // Checking for a block under the "right leg"
+		{
+			this._map.getTerrainHashMap().get((int)(charFeet.getX() + 1 + charFeet.getY() * this._map.getMapWidth())).affectLivingObj(this._playerChar);
+		}
 		else // De-effecting the block's effect (to be done in the block class, TEMP)
 		{
 			this._playerChar.setCollidedState(false);
@@ -99,8 +111,10 @@ public class MapPanel extends JPanel
 	 */
 	public void setLogic()
 	{
+		this._keyListener.processInput();
 		this._playerChar.setMovement();
 		this.checkTerrainCollision();
+		this._playerCam.setPosition();
 	}
 	
 	/**
@@ -127,12 +141,11 @@ public class MapPanel extends JPanel
 		 * Drawing the map - 
 		 */
 		this.drawMap(g);
-		//this.markBlocks(g);
+		this.markBlocks(g);
 		
 		/**
 		 * Drawing the characters - 
 		 */
-		this._playerCam.setPosition();
 		this.drawCharacter(g, this._playerChar);
 	}
 	
@@ -211,6 +224,14 @@ public class MapPanel extends JPanel
 			tb = _map.getObjHashMap().get(key);
 			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
 		}
+		Point charFeet = new Point(this._playerChar.getObjBox().x / this._map.getBlockSize(), (this._playerChar.getObjBox().y +  this._playerChar.getObjBox().height) / this._map.getBlockSize());
+		if (this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())) != null)
+		{
+			g.setColor(Color.BLUE);
+			tb = this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth()));
+			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
+		}
+		
 	}
 
 	public Map getMap()

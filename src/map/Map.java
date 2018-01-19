@@ -90,7 +90,7 @@ public class Map
 						{
 							if (mode == BlockType.Terrain)
 							{
-								this._terrainHashMap.put(_counter, new TerrainBlock(_counter % _sizeW * _blockSize, _counter / _sizeW * _blockSize, _blockSize, Integer.parseInt(node.getNodeValue()), Integer.parseInt(node.getNodeValue()) < 5));
+								this._terrainHashMap.put(_counter, new TerrainBlock(_counter % _sizeW * _blockSize, _counter / _sizeW * _blockSize, _blockSize, Integer.parseInt(node.getNodeValue()), Integer.parseInt(node.getNodeValue()) <= 5));
 							}
 							else 
 							{
