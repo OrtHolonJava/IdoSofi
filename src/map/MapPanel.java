@@ -3,15 +3,10 @@ import javax.swing.JPanel;
 import characters.GameCharacter;
 import characters.PlayerCamera;
 import characters.PlayerKeyListener;
-
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 import images.Img;
 
 /**
@@ -100,7 +95,7 @@ public class MapPanel extends JPanel
 		{
 			this._map.getTerrainHashMap().get((int)(charFeet.getX() + 1 + charFeet.getY() * this._map.getMapWidth())).affectLivingObj(this._playerChar);
 		}
-		else // De-effecting the block's effect (to be done in the block class, TEMP)
+		else // De-effecting the block's effect
 		{
 			this._playerChar.setCollidedState(false);
 		}
@@ -136,12 +131,11 @@ public class MapPanel extends JPanel
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.scale(this._playerCam.getScale(), this._playerCam.getScale());
 		g2d.translate(this._playerCam.getX(), this._playerCam.getY());
-		
 		/**
 		 * Drawing the map - 
 		 */
 		this.drawMap(g);
-		this.markBlocks(g);
+		//this.markBlocks(g);
 		
 		/**
 		 * Drawing the characters - 

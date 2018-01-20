@@ -7,7 +7,7 @@ import map.MapPanel;
  */
 public class PlayerCamera 
 {
-	private int _x, _y;
+	private double _x, _y;
 	private float _scale;
 	private final int _alpha = 25;
 	private GameCharacter _char;
@@ -23,23 +23,35 @@ public class PlayerCamera
 		this._char = ch;
 		this._scale = scale;
 		this._panel = panel;
-		this._x = (this._char.getObjBox().x - (this._panel.getWidth() / (int)(2 * this._scale))) * -1;
-		this._y = (this._char.getObjBox().y - (this._panel.getHeight() / (int)(2 * this._scale))) * -1; 
+		this._x = (this._char.getObjBox().x - (this._panel.getWidth() / (2 * this._scale))) * -1;
+		this._y = (this._char.getObjBox().y - (this._panel.getHeight() / (2 * this._scale))) * -1; 
 	}
 	
 	public void setPosition()
 	{
-		if (this._char.getObjBox().x + (this._panel.getWidth() / (int)(2 * this._scale)) <= this._panel.getMap().getMapWidth() * this._panel.getMap().getBlockSize())
+		/**
+		 * If the player is within the map's vertical bounds - 
+		 */
+		if (this._char.getObjBox().x + (this._panel.getWidth() / (2 * this._scale)) <= this._panel.getMap().getMapWidth() * this._panel.getMap().getBlockSize()
+				&& this._char.getObjBox().x - (this._panel.getWidth() / (2 * this._scale)) >= 0)
 		{
-			this._x += ((this._char.getObjBox().x - (this._panel.getWidth() / (int)(2 * this._scale))) * -1 - this._x) / this._alpha;
+			this._x += ((this._char.getObjBox().x - (this._panel.getWidth() / (2 * this._scale))) * -1 - this._x) / this._alpha;
 		}
 		else
 		{
-			this._x += ((this._panel.getMap().getMapWidth() * this._panel.getMap().getBlockSize() - (this._panel.getWidth() / this._scale)) * -1 - this._x) / this._alpha;
+			if (this._char.getObjBox().x - (this._panel.getWidth() / (2 * this._scale)) >= 0)
+			{
+				this._x += ((this._panel.getMap().getMapWidth() * this._panel.getMap().getBlockSize() - (this._panel.getWidth() / this._scale)) * -1 - this._x) / this._alpha;
+			}
+			else
+			{
+				this._x += (-this._x) / this._alpha;
+			}
 		}
-		if (this._char.getObjBox().y + (this._panel.getHeight() / (int)(2 * this._scale)) <= this._panel.getMap().getMapHeight() * this._panel.getMap().getBlockSize())
+		
+		if (this._char.getObjBox().y + (this._panel.getHeight() / (2 * this._scale)) <= this._panel.getMap().getMapHeight() * this._panel.getMap().getBlockSize())
 		{
-			this._y += ((this._char.getObjBox().y - (this._panel.getHeight() / (int)(2 * this._scale))) * -1 - this._y) / this._alpha;
+			this._y += ((this._char.getObjBox().y - (this._panel.getHeight() / (2 * this._scale))) * -1 - this._y) / this._alpha;
 		}
 		else
 		{
@@ -47,22 +59,22 @@ public class PlayerCamera
 		}
 	}
 
-	public int getX()
+	public double getX()
 {
 		return _x;
 	}
 
-	public void setX(int x) 
+	public void setX(double x) 
 	{
 		_x = x;
 	}
 
-	public int getY() 
+	public double getY() 
 	{
 		return _y;
 	}
 
-	public void setY(int y) 
+	public void setY(double y) 
 	{
 		_y = y;
 	}

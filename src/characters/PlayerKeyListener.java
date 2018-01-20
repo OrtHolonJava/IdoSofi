@@ -25,6 +25,8 @@ public class PlayerKeyListener implements KeyListener
 		{
 			this._char.jump();
 		}
+		
+		
 	}
 
 	@Override

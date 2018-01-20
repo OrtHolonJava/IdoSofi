@@ -2,7 +2,7 @@ package characters;
 
 public class GameCharacter extends LivingObject 
 {
-	private boolean _isRight, _isCollided, _isWalking;
+	private boolean _isRight, _isCollided;
 	private CharacterState _currState;
 	
 	public GameCharacter(int x, int y, int width, int height) 
@@ -46,7 +46,7 @@ public class GameCharacter extends LivingObject
 	{
 		if (this._isCollided)
 		{
-			this._movementY = -20;
+			this._movementY = -17;
 			this._currState = CharacterState.Jumping;
 			this._isCollided = false;
 		}
