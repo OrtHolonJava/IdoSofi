@@ -29,7 +29,6 @@ public class GameLoop implements ActionListener
 			 * Rendering the map panel
 			 */
 			this._gamePanel.repaint();
-			//this._gamePanel.paintImmediately(0, 0, this._gamePanel.getWidth(), this._gamePanel.getHeight());	
 		}
 	}
 

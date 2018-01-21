@@ -19,14 +19,14 @@ public class MapFrame extends JFrame
 		this.setTitle("Link's Scrolls v0.1");
 		this._mapPanel = new MapPanel(mapID ,rows, cols);
 		add(this._mapPanel);
-		GameLoop gLoop = new GameLoop(this._mapPanel);
-		Timer gameTimer = new Timer(_delay, gLoop);
+		FixedTSGameLoop fixedGLoop = new FixedTSGameLoop(this._mapPanel);
+		Thread gLoopThread = new Thread(fixedGLoop);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    //setSize(1280, 720);
 	    setResizable(false);
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);
 	    setUndecorated(true);
 	    setVisible(true);
-	    gameTimer.start(); //new timer at 60 fps, the timing mechanism
+	    gLoopThread.start();
 	}
 }
