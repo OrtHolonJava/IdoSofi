@@ -1,5 +1,4 @@
 package map;
-import javax.swing.Timer;
 import javax.swing.JFrame;
 
 /**
