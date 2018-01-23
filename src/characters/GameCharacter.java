@@ -46,7 +46,7 @@ public class GameCharacter extends LivingObject
 	{
 		if (this._isCollided)
 		{
-			this._movementY = -17;
+			this._movementY = -25;
 			this._currState = CharacterState.Jumping;
 			this._isCollided = false;
 		}

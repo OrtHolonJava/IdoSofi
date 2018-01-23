@@ -28,10 +28,10 @@ public class FixedTSGameLoop implements Runnable
 			{
 				tick();
 				updates++;
-				render();
-				frames++;
 				delta--;
 			}
+			render();
+			frames++;
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;

@@ -2,21 +2,32 @@ package characters;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+
+
 public class PlayerKeyListener implements KeyListener 
 {
 	private GameCharacter _char;
 	private boolean[] _pressedKeys;
+	private static int KEY_A = 0, KEY_D = 1, COUNTINUOUS_INPUT_KEYS = 2;
 	
 	public PlayerKeyListener(GameCharacter ch)
 	{
 		this._char = ch;
-		this._pressedKeys = new boolean[250];
+		this._pressedKeys = new boolean[COUNTINUOUS_INPUT_KEYS];
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) 
 	{
-		this._pressedKeys[e.getKeyCode()] = true;
+		if (e.getKeyCode() == KeyEvent.VK_A)
+		{
+			this._pressedKeys[KEY_A] = true;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_D)
+		{
+			this._pressedKeys[KEY_D] = true;
+		}
 		
 		/**
 		 * Handle momentary input - 
@@ -32,7 +43,15 @@ public class PlayerKeyListener implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		this._pressedKeys[e.getKeyCode()] = false;
+		if (e.getKeyCode() == KeyEvent.VK_A)
+		{
+			this._pressedKeys[KEY_A] = false;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_D)
+		{
+			this._pressedKeys[KEY_D] = false;
+		}
 	}
 	
 	/**
@@ -40,13 +59,13 @@ public class PlayerKeyListener implements KeyListener
 	 */
 	public void processInput()
 	{
-		if (this._pressedKeys[KeyEvent.VK_A] || this._pressedKeys[KeyEvent.VK_D])
+		if (this._pressedKeys[KEY_A] || this._pressedKeys[KEY_D])
 		{
-			if (this._pressedKeys[KeyEvent.VK_A])
+			if (this._pressedKeys[KEY_A])
 			{
 				this._char.walkLeft();
 			}
-			if (this._pressedKeys[KeyEvent.VK_D])
+			if (this._pressedKeys[KEY_D])
 			{
 				this._char.walkRight();
 			}	
