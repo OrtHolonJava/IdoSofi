@@ -21,10 +21,10 @@ public class MapFrame extends JFrame
 		FixedTSGameLoop fixedGLoop = new FixedTSGameLoop(this._mapPanel);
 		Thread gLoopThread = new Thread(fixedGLoop);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    //setSize(1280, 720);
-	    setResizable(false);
-	    setExtendedState(JFrame.MAXIMIZED_BOTH);
-	    setUndecorated(true);
+	    setSize(1280, 720);
+	    //setResizable(false);
+	    //setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    //setUndecorated(true);
 	    setVisible(true);
 	    gLoopThread.start();
 	}
