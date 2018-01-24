@@ -69,7 +69,7 @@ public class MapPanel extends JPanel
 		/**
 		 * Initializing character-related instances.
 		 */
-		this._playerChar = new GameCharacter(50, 100, _charBoxWidth, _charBoxHeight);
+		this._playerChar = new GameCharacter(50, 100, _charBoxWidth, _charBoxHeight, 1);
 		this._playerCam = new PlayerCamera(this._playerChar, 2f, this);
 		this._keyListener = new PlayerKeyListener(this._playerChar);
 		this.addKeyListener(this._keyListener);

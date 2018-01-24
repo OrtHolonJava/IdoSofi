@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 public class MapFrame extends JFrame
 {
 	private MapPanel _mapPanel;
-	private final int _delay = 1000 / 60;
 	
 	/**
 	 * The Constructor Method: 
@@ -21,8 +20,8 @@ public class MapFrame extends JFrame
 		FixedTSGameLoop fixedGLoop = new FixedTSGameLoop(this._mapPanel);
 		Thread gLoopThread = new Thread(fixedGLoop);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    //setSize(1280, 720);
 	    setResizable(false);
+	    //setSize(1280, 720);
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);
 	    setUndecorated(true);
 	    setVisible(true);

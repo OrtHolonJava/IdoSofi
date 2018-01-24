@@ -25,7 +25,6 @@ public class Img
 	public Img(String path, int x, int y, int width, int height)
 	{
 		_image = new ImageIcon(this.getClass().getClassLoader().getResource(path)).getImage(); 
-		
 		this.setImgCords(x, y);
 		this.setImgSize(width, height);
 	}

@@ -4,10 +4,12 @@ public class GameCharacter extends LivingObject
 {
 	private boolean _isRight, _isCollided;
 	private CharacterState _currState;
+	private int _charID;
 	
-	public GameCharacter(int x, int y, int width, int height) 
+	public GameCharacter(int x, int y, int width, int height, int id) 
 	{
 		super(x, y, width, height);
+		this._charID = id;
 		this._isRight = this._isGravityApplied = true;
 		this._currState = CharacterState.Falling;
 		this._isCollided = false;
@@ -47,7 +49,6 @@ public class GameCharacter extends LivingObject
 		if (this._isCollided)
 		{
 			this._movementY = -25;
-			this._currState = CharacterState.Jumping;
 			this._isCollided = false;
 		}
 	}
