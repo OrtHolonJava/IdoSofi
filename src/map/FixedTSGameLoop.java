@@ -28,10 +28,25 @@ public class FixedTSGameLoop implements Runnable
 			{
 				tick();
 				updates++;
+				render();
+				frames++;
 				delta--;
 			}
 			render();
 			frames++;
+			
+			/**
+			 * Capping the framerate - 
+			 */
+			try
+			{
+				Thread.sleep(5);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
