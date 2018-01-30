@@ -46,7 +46,7 @@ public class FixedTSGameLoop implements Runnable
 			if (System.currentTimeMillis() - timer > 1000)
 			{
 				timer += 1000;
-				System.out.println("FPS: " + frames + " TICKS: " + updates);
+				//System.out.println("FPS: " + frames + " TICKS: " + updates);
 				frames = 0;
 				updates = 0;
 			}
@@ -66,7 +66,7 @@ public class FixedTSGameLoop implements Runnable
 		/**
 		 * Rendering the map panel
 		 */
-		//this._gamePanel.repaint();
-		this._gamePanel.paintImmediately(0, 0, this._gamePanel.getWidth(), this._gamePanel.getHeight());
+		this._gamePanel.repaint();
+		//this._gamePanel.paintImmediately(0, 0, this._gamePanel.getWidth(), this._gamePanel.getHeight());
 	}
 }

@@ -1,5 +1,7 @@
 package characters;
 
+import map.Map;
+
 public class GameCharacter extends LivingObject 
 {
 	private boolean _isRight, _isCollided;
@@ -124,6 +126,14 @@ public class GameCharacter extends LivingObject
 		{
 			this._currState = CharacterState.Falling;
 		}
+	}
+	
+	/**
+	 * Method - Returns the map cell ID in which the character's feet are located.
+	 */
+	public int getFeetBlock(int mapWidth)
+	{
+		return this._objBox.x / Map._blockSize + (this._objBox.y + this._objBox.height) / Map._blockSize * mapWidth;
 	}
 	
 	public boolean isRight() 

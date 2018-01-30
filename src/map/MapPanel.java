@@ -53,7 +53,7 @@ public class MapPanel extends JPanel
 		 {
 			for (int j = 0; j < _terrainTSWidth; j++) 
 			{
-				this._terrainTileSet[i][j] = new Img(String.format("images\\maps\\map%d\\terrainTiles\\%d.png", mapID, i * _terrainTSWidth + j), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
+				this._terrainTileSet[i][j] = new Img(String.format("images\\maps\\map%d\\terrainTiles\\%d.png", mapID, i * _terrainTSWidth + j), 0, 0, Map._blockSize, Map._blockSize);
 			}
 		 }
 		 
@@ -63,7 +63,7 @@ public class MapPanel extends JPanel
 		this._objTileSet = new Img[_objTSLength];
 		for (int i = 0; i < _objTSLength; i++) 
 		{
-			this._objTileSet[i] = new Img(String.format("images\\maps\\map%d\\objTiles\\%d.png", mapID, i), 0, 0, this._map.getBlockSize(), this._map.getBlockSize());
+			this._objTileSet[i] = new Img(String.format("images\\maps\\map%d\\objTiles\\%d.png", mapID, i), 0, 0, Map._blockSize, Map._blockSize);
 		}
 		
 		/**
@@ -85,16 +85,19 @@ public class MapPanel extends JPanel
 		return this._isRunning;
 	}
 	
+	/**
+	 * Method: Checking if a character is collided with some terrain block.
+	 */
 	public void checkTerrainCollision()
 	{
-		Point charFeet = new Point(this._playerChar.getObjBox().x / this._map.getBlockSize(), (this._playerChar.getObjBox().y +  this._playerChar.getObjBox().height) / this._map.getBlockSize());
-		if (this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())) != null)
+		int charFeetBlock = this._playerChar.getFeetBlock(this._map.getMapWidth());
+		if (this._map.getTerrainHashMap().get(charFeetBlock) != null)
 		{
-			this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())).affectLivingObj(this._playerChar);
+			this._map.getTerrainHashMap().get(charFeetBlock).affectLivingObj(this._playerChar);
 		}
-		else if (this._map.getTerrainHashMap().get((int)(charFeet.getX() + 1 + charFeet.getY() * this._map.getMapWidth())) != null && this._playerChar.getObjBox().x >= 0) // Checking for a block under the "right leg"
+		else if (this._map.getTerrainHashMap().get(charFeetBlock + 1) != null && this._playerChar.getObjBox().x >= 0) // Checking for a block under the "right leg"
 		{
-			this._map.getTerrainHashMap().get((int)(charFeet.getX() + 1 + charFeet.getY() * this._map.getMapWidth())).affectLivingObj(this._playerChar);
+			this._map.getTerrainHashMap().get(charFeetBlock + 1).affectLivingObj(this._playerChar);
 		}
 		else // De-effecting the block's effect
 		{
@@ -184,7 +187,7 @@ public class MapPanel extends JPanel
 	public void drawTerrainBlock(Graphics g, int blockKey)
 	{
 		int tile = _map.getTerrainHashMap().get(blockKey).getTile() - 1;		
-		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].setImgCords((blockKey % _columns) * _map.getBlockSize(), (blockKey / _columns) * _map.getBlockSize());
+		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].setImgCords((blockKey % _columns) * Map._blockSize, (blockKey / _columns) * Map._blockSize);
 		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].drawImg(g);
 	}
 	
@@ -195,7 +198,7 @@ public class MapPanel extends JPanel
 	public void drawObjBlock(Graphics g, int blockKey)
 	{
 		int tile = _map.getObjHashMap().get(blockKey).getTile() - 1;		
-		this._objTileSet[tile].setImgCords((blockKey % _columns) * _map.getBlockSize(), (blockKey / _columns) * _map.getBlockSize());
+		this._objTileSet[tile].setImgCords((blockKey % _columns) * Map._blockSize, (blockKey / _columns) * Map._blockSize);
 		this._objTileSet[tile].drawImg(g);
 	}
 	
@@ -219,7 +222,7 @@ public class MapPanel extends JPanel
 			tb = _map.getObjHashMap().get(key);
 			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
 		}
-		Point charFeet = new Point(this._playerChar.getObjBox().x / this._map.getBlockSize(), (this._playerChar.getObjBox().y +  this._playerChar.getObjBox().height) / this._map.getBlockSize());
+		Point charFeet = new Point(this._playerChar.getObjBox().x / Map._blockSize, (this._playerChar.getObjBox().y +  this._playerChar.getObjBox().height) / Map._blockSize);
 		if (this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())) != null)
 		{
 			g.setColor(Color.BLUE);

@@ -1,5 +1,6 @@
 package characters;
 
+import map.Map;
 import map.MapPanel;
 
 /**
@@ -32,7 +33,7 @@ public class PlayerCamera
 		/**
 		 * If the player is within the map's vertical bounds - 
 		 */
-		if (this._char.getObjBox().x + (this._panel.getWidth() / (2 * this._scale)) <= this._panel.getMap().getMapWidth() * this._panel.getMap().getBlockSize()
+		if (this._char.getObjBox().x + (this._panel.getWidth() / (2 * this._scale)) <= this._panel.getMap().getMapWidth() * Map._blockSize
 				&& this._char.getObjBox().x - (this._panel.getWidth() / (2 * this._scale)) >= 0)
 		{
 			this._x += ((this._char.getObjBox().x - (this._panel.getWidth() / (2 * this._scale))) * -1 - this._x) / this._alpha;
@@ -41,7 +42,7 @@ public class PlayerCamera
 		{
 			if (this._char.getObjBox().x - (this._panel.getWidth() / (2 * this._scale)) >= 0)
 			{
-				this._x += ((this._panel.getMap().getMapWidth() * this._panel.getMap().getBlockSize() - (this._panel.getWidth() / this._scale)) * -1 - this._x) / this._alpha;
+				this._x += ((this._panel.getMap().getMapWidth() * Map._blockSize - (this._panel.getWidth() / this._scale)) * -1 - this._x) / this._alpha;
 			}
 			else
 			{
@@ -49,13 +50,13 @@ public class PlayerCamera
 			}
 		}
 		
-		if (this._char.getObjBox().y + (this._panel.getHeight() / (2 * this._scale)) <= this._panel.getMap().getMapHeight() * this._panel.getMap().getBlockSize())
+		if (this._char.getObjBox().y + (this._panel.getHeight() / (2 * this._scale)) <= this._panel.getMap().getMapHeight() * Map._blockSize)
 		{
 			this._y += ((this._char.getObjBox().y - (this._panel.getHeight() / (2 * this._scale))) * -1 - this._y) / this._alpha;
 		}
 		else
 		{
-			this._y += ((this._panel.getMap().getMapHeight() * this._panel.getMap().getBlockSize() - (this._panel.getHeight() / this._scale)) * -1 - this._y) / this._alpha;
+			this._y += ((this._panel.getMap().getMapHeight() * Map._blockSize - (this._panel.getHeight() / this._scale)) * -1 - this._y) / this._alpha;
 		}
 	}
 

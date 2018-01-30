@@ -15,7 +15,7 @@ public class Map
 {
 	private int _sizeW, _sizeH;
 	private int _counter = 0;
-	private final int _blockSize = 30;
+	public static final int _blockSize = 30;
 	
 	// Each cell value represents the tile image that should be drawn at its area (graphical purpose).
 	// Each node represents an 'actual' block in the map (logical purpose).
@@ -130,11 +130,6 @@ public class Map
 	public void setObjHashMap(HashMap<Integer, ObjectBlock> objHashMap)
 	{
 		_objHashMap = objHashMap;
-	}
-	
-	public int getBlockSize()
-	{
-		return this._blockSize;
 	}
 	
 	public int getMapWidth()
