@@ -10,7 +10,7 @@ import images.Img;
  */
 public class Animator implements ActionListener
 {
-	private static Img
+	private static Img sprites;
 	
 	private int _currFrame;
 	private Img _currentImage;
