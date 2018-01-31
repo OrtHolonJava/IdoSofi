@@ -50,7 +50,7 @@ public class GameCharacter extends LivingObject
 	{
 		if (this._isCollided)
 		{
-			this._movementY = -16;
+			this._movementY = -25;
 			this._isCollided = false;
 		}
 	}

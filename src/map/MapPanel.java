@@ -39,7 +39,6 @@ public class MapPanel extends JPanel
 		 this._columns = cols;
 		 this._imgBackground = new Img(String.format("images\\backgrounds\\bgMap%d.png", mapID), 0, 0, 1920, 1080);
 		 this.setFocusable(true);
-		 //this.setOpaque(false);
 		/**
 		 * Initializing the instance of the map logic.
 		 */
@@ -139,7 +138,7 @@ public class MapPanel extends JPanel
 		 * Drawing the map - 
 		 */
 		this.drawMap(g);
-		//this.markBlocks(g);
+		this.markBlocks(g);
 		
 		/**
 		 * Drawing the characters - 
@@ -213,21 +212,21 @@ public class MapPanel extends JPanel
 		for (int key : _map.getTerrainHashMap().keySet()) 
 		{
 			tb = _map.getTerrainHashMap().get(key);
-			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
+			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, Map._blockSize, Map._blockSize);
 		}
 		
 		g.setColor(Color.RED);
 		for (int key : _map.getObjHashMap().keySet()) 
 		{
 			tb = _map.getObjHashMap().get(key);
-			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
+			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, Map._blockSize, Map._blockSize);
 		}
 		Point charFeet = new Point(this._playerChar.getObjBox().x / Map._blockSize, (this._playerChar.getObjBox().y +  this._playerChar.getObjBox().height) / Map._blockSize);
 		if (this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth())) != null)
 		{
 			g.setColor(Color.BLUE);
 			tb = this._map.getTerrainHashMap().get((int)(charFeet.getX() + charFeet.getY() * this._map.getMapWidth()));
-			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, tb.getRectangle().width, tb.getRectangle().height);
+			g.drawRect(tb.getRectangle().x, tb.getRectangle().y, Map._blockSize, Map._blockSize);
 		}
 		
 	}
