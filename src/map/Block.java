@@ -7,8 +7,8 @@ import characters.LivingObject;
  */
 public abstract class Block
 {
-	protected int _tile;
-
+	protected int _tile, _x, _y;
+	
 	/**
 	 * The Constructor Method - Receives values for each attribute and
 	 * initializes an instance of the class.
@@ -18,9 +18,11 @@ public abstract class Block
 	 * @param size
 	 * @param type
 	 */
-	public Block(int tile)
+	public Block(int tile, int x, int y)
 	{
 		this._tile = tile;
+		this._x = x;
+		this._y = y;
 	}
 
 	/**
@@ -37,7 +39,7 @@ public abstract class Block
 	 * 
 	 * @param obj
 	 */
-	public abstract void affectLivingObj(LivingObject obj, int x, int y);
+	public abstract void affectLivingObj(LivingObject obj);
 
 	/**
 	 * The toString Method

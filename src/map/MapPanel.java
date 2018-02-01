@@ -7,7 +7,6 @@ import characters.PlayerKeyListener;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import images.Img;
 
 /**
@@ -89,18 +88,26 @@ public class MapPanel extends JPanel
 	public void checkTerrainCollision()
 	{
 		int feetBlock = this._playerChar.getFeetBlock(this._map.getMapWidth());
-		if (this._map.getTerrainHashMap().get(feetBlock) != null)
+		TerrainBlock tempBlock = this._map.getTerrainHashMap().get(feetBlock);
+		if (tempBlock != null)
 		{
-			this._map.getTerrainHashMap().get(feetBlock).affectLivingObj(this._playerChar, getBlockX(feetBlock), getBlockY(feetBlock));
+			tempBlock.affectLivingObj(this._playerChar);
+			return;
 		}
-		else if (this._map.getTerrainHashMap().get(++feetBlock) != null && this._playerChar.getObjBox().x >= 0) // Checking for a block under the "right leg"
+		
+		/**
+		 * Checking for a block under the "right leg" -
+		 */
+		tempBlock = this._map.getTerrainHashMap().get(feetBlock + 1);
+		if (tempBlock != null && this._playerChar.getObjBox().x >= 0)
 		{
-			this._map.getTerrainHashMap().get(feetBlock).affectLivingObj(this._playerChar, getBlockX(feetBlock), getBlockY(feetBlock));
+			tempBlock.affectLivingObj(this._playerChar);
+			return;
 		}
-		else // De-effecting the block's effect
-		{
-			this._playerChar.setCollidedState(false);
-		}
+		/**
+		 * De-effecting the block's effect - 
+		 */
+		this._playerChar.setCollidedState(false);
 	}
 	
 	/**
@@ -154,7 +161,7 @@ public class MapPanel extends JPanel
 		 * Drawing the map -
 		 */
 		this.drawMap(g);
-		//this.markBlocks(g);
+		this.markBlocks(g);
 
 		/**
 		 * Drawing the characters -
@@ -172,18 +179,19 @@ public class MapPanel extends JPanel
 		/**
 		 * Drawing the terrain blocks of the map (first layer of tiles)-
 		 */
-		for (int key : _map.getTerrainHashMap().keySet())
+		for (TerrainBlock tb : _map.getTerrainHashMap().values())
 		{
-			this.drawTerrainBlock(g, key);
+			this.drawTerrainBlock(g, tb);
 		}
 
 		/**
 		 * Drawing the object blocks of the map (second layer of tiles)-
 		 */
-		for (int key : _map.getObjHashMap().keySet())
+		for (ObjectBlock ob : _map.getObjHashMap().values())
 		{
-			this.drawObjBlock(g, key);
+			this.drawObjBlock(g, ob);
 		}
+		
 	}
 
 	/**
@@ -193,7 +201,7 @@ public class MapPanel extends JPanel
 	 */
 	public void drawCharacter(Graphics g, GameCharacter chara)
 	{
-		g.setColor(Color.pink);
+		g.setColor(Color.CYAN);
 		g.fillRect(chara.getObjBox().x, chara.getObjBox().y, chara.getObjBox().width, chara.getObjBox().height);
 	}
 
@@ -203,10 +211,10 @@ public class MapPanel extends JPanel
 	 * 
 	 * @param g
 	 */
-	public void drawTerrainBlock(Graphics g, int blockKey)
+	public void drawTerrainBlock(Graphics g, TerrainBlock tb)
 	{
-		int tile = _map.getTerrainHashMap().get(blockKey).getTile() - 1;
-		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].setImgCords((blockKey % this._map.getMapWidth()) * Map._blockSize, (blockKey / this._map.getMapWidth()) * Map._blockSize);
+		int tile = tb.getTile() - 1;
+		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].setImgCords(tb._x, tb._y);
 		this._terrainTileSet[tile / _terrainTSWidth][tile % _terrainTSWidth].drawImg(g);
 	}
 
@@ -216,10 +224,10 @@ public class MapPanel extends JPanel
 	 * 
 	 * @param g
 	 */
-	public void drawObjBlock(Graphics g, int blockKey)
+	public void drawObjBlock(Graphics g, ObjectBlock ob)
 	{
-		int tile = _map.getObjHashMap().get(blockKey).getTile() - 1;
-		this._objTileSet[tile].setImgCords((blockKey % this._map.getMapWidth()) * Map._blockSize, (blockKey / this._map.getMapWidth()) * Map._blockSize);
+		int tile = ob.getTile() - 1;
+		this._objTileSet[tile].setImgCords(ob._x, ob._y);
 		this._objTileSet[tile].drawImg(g);
 	}
 
@@ -229,22 +237,22 @@ public class MapPanel extends JPanel
 	public void markBlocks(Graphics g)
 	{
 		g.setColor(Color.GREEN);
-		for (int key : _map.getTerrainHashMap().keySet())
+		for (TerrainBlock tb : _map.getTerrainHashMap().values())
 		{
-			g.drawRect(getBlockX(key), getBlockY(key), Map._blockSize, Map._blockSize);
+			g.drawRect(tb._x, tb._y, Map._blockSize, Map._blockSize);
 		}
 
 		g.setColor(Color.RED);
-		for (int key : _map.getObjHashMap().keySet())
+		for (ObjectBlock ob : _map.getObjHashMap().values())
 		{
-			g.drawRect(getBlockX(key), getBlockY(key), Map._blockSize, Map._blockSize);
+			g.drawRect(ob._x, ob._y, Map._blockSize, Map._blockSize);
 		}
 		
-		int charFeetBlock = this._playerChar.getFeetBlock(this._map.getMapWidth());
-		if (this._map.getTerrainHashMap().get(charFeetBlock) != null)
+		TerrainBlock tempBlock = this._map.getTerrainHashMap().get(this._playerChar.getFeetBlock(this._map.getMapWidth()));
+		if (tempBlock != null)
 		{
 			g.setColor(Color.BLUE);
-			g.drawRect(getBlockX(charFeetBlock), getBlockY(charFeetBlock), Map._blockSize, Map._blockSize);
+			g.drawRect(tempBlock._x, tempBlock._y, Map._blockSize, Map._blockSize);
 		}
 
 	}

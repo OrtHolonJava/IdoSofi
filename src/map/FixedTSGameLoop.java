@@ -12,7 +12,6 @@ public class FixedTSGameLoop implements Runnable
 	@Override
 	public void run()
 	{
-		double test1=0, test2=0, test3=0, test4=0;
 		long lastTime = System.nanoTime(), now;
 		double amountOfTicks = 60.0;
 		double amountOfRenders = 120.0;
@@ -20,9 +19,6 @@ public class FixedTSGameLoop implements Runnable
 		double nsRender = 1000000000 / amountOfRenders;
 		double deltaTick = 0;
 		double deltaRender = 0;
-		long timer = System.currentTimeMillis();
-		int updates = 0;
-		int frames = 0;
 		while (this._gamePanel.isRunning())
 		{
 			now = System.nanoTime();
@@ -31,28 +27,14 @@ public class FixedTSGameLoop implements Runnable
 			lastTime = now;
 			while (deltaTick >= 1)
 			{
-				test1 = System.nanoTime();
 				tick();
-				test2 = System.nanoTime() - test1;
-				updates++;
 				deltaTick--;
 			}
 
 			while (deltaRender >= 1)
 			{
-				test3 = System.nanoTime();
 				render();
-				test4 = System.nanoTime() - test3;
-				frames++;
 				deltaRender--;
-			}
-
-			if (System.currentTimeMillis() - timer > 1000)
-			{
-				timer += 1000;
-				System.out.println("FPS: " + frames + " TICKS: " + updates + " Render time: " + test4 + " Tick time: " + test2);
-				frames = 0;
-				updates = 0;
 			}
 		}
 	}

@@ -3,13 +3,13 @@ import characters.LivingObject;
 
 public class ObjectBlock extends Block
 {
-	public ObjectBlock(int tile)
+	public ObjectBlock(int tile, int x, int y)
 	{
-		super(tile);
+		super(tile, x, y);
 	}
 
 	@Override
-	public void affectLivingObj(LivingObject obj, int x, int y)
+	public void affectLivingObj(LivingObject obj)
 	{
 				
 	}

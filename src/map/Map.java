@@ -95,11 +95,11 @@ public class Map
 						{
 							if (mode == BlockType.Terrain)
 							{
-								this._terrainHashMap.put(_counter, new TerrainBlock(Integer.parseInt(node.getNodeValue()), Integer.parseInt(node.getNodeValue()) <= 5));
+								this._terrainHashMap.put(_counter, new TerrainBlock(Integer.parseInt(node.getNodeValue()), _counter % this._sizeW * _blockSize, _counter / this._sizeW * _blockSize, Integer.parseInt(node.getNodeValue()) <= 5));
 							}
 							else
 							{
-								this._objHashMap.put(_counter, new ObjectBlock(Integer.parseInt(node.getNodeValue())));
+								this._objHashMap.put(_counter, new ObjectBlock(Integer.parseInt(node.getNodeValue()), _counter % this._sizeW * _blockSize, _counter / this._sizeW *_blockSize));
 							}
 						}
 						this._counter++;

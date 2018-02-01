@@ -7,19 +7,19 @@ public class TerrainBlock extends Block
 	
 	private boolean _isFloor;
 	
-	public TerrainBlock(int tile, boolean floor)
+	public TerrainBlock(int tile, int x, int y, boolean floor)
 	{
-		super(tile);
+		super(tile, x, y);
 		this._isFloor = floor;
 	}
 
 	@Override
-	public void affectLivingObj(LivingObject obj, int x, int y)
+	public void affectLivingObj(LivingObject obj)
 	{
 		if (this._isFloor)
 		{
 			obj.setCollidedState(true);
-			obj.setPosition(obj.getObjBox().x, y - (int)(obj.getObjBox().getHeight()) + this._feetPositioning);
+			obj.setPosition(obj.getObjBox().x, this._y - (int)(obj.getObjBox().getHeight()) + _feetPositioning);
 		}
 	}
 }
