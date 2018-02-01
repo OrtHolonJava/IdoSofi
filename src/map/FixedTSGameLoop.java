@@ -1,5 +1,7 @@
 package map;
 
+import javax.swing.SwingUtilities;
+
 public class FixedTSGameLoop implements Runnable
 {
 	private MapPanel _gamePanel;
@@ -44,7 +46,7 @@ public class FixedTSGameLoop implements Runnable
 		/**
 		 * Logic goes here:
 		 */
-		this._gamePanel.setLogic();
+		_gamePanel.setLogic();
 	}
 
 	private void render()
@@ -52,6 +54,6 @@ public class FixedTSGameLoop implements Runnable
 		/**
 		 * Rendering the map panel
 		 */
-		this._gamePanel.repaint();
+		 _gamePanel.paintImmediately(0, 0, _gamePanel.getWidth(), _gamePanel.getHeight());
 	}
 }

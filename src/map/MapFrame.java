@@ -1,5 +1,8 @@
 package map;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
 /**
  * The MapFrame Class - 
@@ -25,6 +28,23 @@ public class MapFrame extends JFrame
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);
 	    setUndecorated(true);
 	    setVisible(true);
-	    gLoopThread.start();
+	    //gLoopThread.start();
+	    Timer t = new Timer(1000/60, new ActionListener()
+		{
+			public void actionPerformed(ActionEvent arg0)
+			{
+				_mapPanel.setLogic();
+			}
+		});
+	    t.start();
+	    
+	    Timer t1 = new Timer(1000/180, new ActionListener()
+		{
+			public void actionPerformed(ActionEvent arg0)
+			{
+				_mapPanel.repaint();
+			}
+		});
+	    t1.start();
 	}
 }
