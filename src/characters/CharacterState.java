@@ -1,6 +1,6 @@
 package characters;
 
-public enum CharacterState 
+public enum CharacterState
 {
 	Walking, Jumping, Standing, Alert, Falling, Flying;
 }

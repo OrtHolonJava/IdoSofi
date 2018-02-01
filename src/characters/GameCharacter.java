@@ -2,22 +2,23 @@ package characters;
 
 import map.Map;
 
-public class GameCharacter extends LivingObject 
+public class GameCharacter extends LivingObject
 {
 	private boolean _isRight, _isCollided;
 	private CharacterState _currState;
 	private int _charID;
-	
-	public GameCharacter(int x, int y, int width, int height, int id) 
+
+	public GameCharacter(int x, int y, int width, int height, int id)
 	{
 		super(x, y, width, height);
 		this._charID = id;
 		this._isRight = this._isGravityApplied = true;
 		this._currState = CharacterState.Falling;
 		this._isCollided = false;
-		this._movementX = 0; this._movementY = 0;
+		this._movementX = 0;
+		this._movementY = 0;
 	}
-	
+
 	public void walkRight()
 	{
 		if (this._isCollided)
@@ -31,7 +32,7 @@ public class GameCharacter extends LivingObject
 			this._movementX = 3;
 		}
 	}
-	
+
 	public void walkLeft()
 	{
 		if (this._isCollided)
@@ -45,7 +46,7 @@ public class GameCharacter extends LivingObject
 			this._movementX = -3;
 		}
 	}
-	
+
 	public void jump()
 	{
 		if (this._isCollided)
@@ -54,7 +55,7 @@ public class GameCharacter extends LivingObject
 			this._isCollided = false;
 		}
 	}
-	
+
 	@Override
 	public void setMovement()
 	{
@@ -62,13 +63,13 @@ public class GameCharacter extends LivingObject
 		this._objBox.y += this._movementY;
 		this.applyGravity();
 	}
-	
-	public CharacterState getCurrState() 
+
+	public CharacterState getCurrState()
 	{
 		return _currState;
 	}
 
-	public void setCurrState(CharacterState currState) 
+	public void setCurrState(CharacterState currState)
 	{
 		_currState = currState;
 	}
@@ -97,11 +98,11 @@ public class GameCharacter extends LivingObject
 			this._currState = CharacterState.Falling;
 		}
 	}
-	
+
 	/**
 	 * Method: Whenever the player is not actively moving on the horizontal axis
 	 */
-	public void stopHorizontalMovement()
+	private void stopHorizontalMovement()
 	{
 		if (this._movementX > 0)
 		{
@@ -112,11 +113,11 @@ public class GameCharacter extends LivingObject
 			this._movementX++;
 		}
 	}
-	
-	public void deEffectXMovement()
+
+	private void deEffectXMovement()
 	{
 		/**
-		 * Reset character status - 
+		 * Reset character status -
 		 */
 		if (this._isCollided)
 		{
@@ -127,36 +128,41 @@ public class GameCharacter extends LivingObject
 			this._currState = CharacterState.Falling;
 		}
 	}
-	
+
+	public void stopWalking()
+	{
+		this.deEffectXMovement();
+		this.stopHorizontalMovement();
+	}
+
 	/**
-	 * Method - Returns the map cell ID in which the character's feet are located.
+	 * Method - Returns the map cell ID in which the character's feet are
+	 * located.
 	 */
 	public int getFeetBlock(int mapWidth)
 	{
 		return this._objBox.x / Map._blockSize + (this._objBox.y + this._objBox.height) / Map._blockSize * mapWidth;
 	}
-	
-	public boolean isRight() 
+
+	public boolean isRight()
 	{
 		return _isRight;
 	}
 
-	public void setRight(boolean isRight) 
+	public void setRight(boolean isRight)
 	{
 		_isRight = isRight;
 	}
 
-	public boolean isCollided() 
+	public boolean isCollided()
 	{
 		return _isCollided;
 	}
 
 	@Override
-	public void setCollidedState(boolean val) 
+	public void setCollidedState(boolean val)
 	{
 		this._isCollided = val;
 	}
-	
-	
 
 }

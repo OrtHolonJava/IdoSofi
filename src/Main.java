@@ -3,10 +3,10 @@ import map.*;
 /**
  * The Main Class of the Project (TEMP)-
  */
-public class Main 
+public class Main
 {
 
-	public static void main(String[] args) 
+	public static void main(String[] args)
 	{
 		MapFrame frame1 = new MapFrame(1, 40, 69);
 	}
