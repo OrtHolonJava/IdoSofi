@@ -38,6 +38,19 @@ public class FixedTSGameLoop implements Runnable
 				render();
 				deltaRender--;
 			}
+			
+			/**
+			 * Preventing from the while loop to consume the CPU like mad.
+			 */
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -54,6 +67,6 @@ public class FixedTSGameLoop implements Runnable
 		/**
 		 * Rendering the map panel
 		 */
-		 _gamePanel.paintImmediately(0, 0, _gamePanel.getWidth(), _gamePanel.getHeight());
+		 SwingUtilities.invokeLater(() -> _gamePanel.repaint());
 	}
 }
