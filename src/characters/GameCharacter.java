@@ -1,5 +1,7 @@
 package characters;
 
+import java.awt.Graphics;
+
 import map.Map;
 
 public class GameCharacter extends LivingObject
@@ -7,6 +9,12 @@ public class GameCharacter extends LivingObject
 	private boolean _isRight, _isCollided;
 	private CharacterState _currState;
 	private int _charID;
+	private CharacterAnimator _animator;
+	
+	/**
+	 * Character's stats -
+	 */
+	private final int _walkingSpeed = 4, _flyingSpeed = 3, _jumpingHeight = 17;
 
 	public GameCharacter(int x, int y, int width, int height, int id)
 	{
@@ -17,33 +25,36 @@ public class GameCharacter extends LivingObject
 		this._isCollided = false;
 		this._movementX = 0;
 		this._movementY = 0;
+		this._animator = new CharacterAnimator(this._charID);
 	}
 
 	public void walkRight()
 	{
+		this._isRight = true;
 		if (this._isCollided)
 		{
 			this._currState = CharacterState.Walking;
-			this._movementX = 4;
+			this._movementX = _walkingSpeed;
 		}
 		else
 		{
-			this._currState = CharacterState.Flying;
-			this._movementX = 3;
+			this._currState = CharacterState.Falling;
+			this._movementX = _flyingSpeed;
 		}
 	}
 
 	public void walkLeft()
 	{
+		this._isRight = false;
 		if (this._isCollided)
 		{
 			this._currState = CharacterState.Walking;
-			this._movementX = -4;
+			this._movementX = -_walkingSpeed;
 		}
 		else
 		{
-			this._currState = CharacterState.Flying;
-			this._movementX = -3;
+			this._currState = CharacterState.Falling;
+			this._movementX = -_flyingSpeed;
 		}
 	}
 
@@ -51,7 +62,7 @@ public class GameCharacter extends LivingObject
 	{
 		if (this._isCollided)
 		{
-			this._movementY = -25;
+			this._movementY = -_jumpingHeight;
 			this._isCollided = false;
 		}
 	}
@@ -136,8 +147,7 @@ public class GameCharacter extends LivingObject
 	}
 
 	/**
-	 * Method - Returns the map cell ID in which the character's feet are
-	 * located.
+	 * Method - Returns the map cell ID in which the character's feet are located.
 	 */
 	public int getFeetBlock(int mapWidth)
 	{
@@ -163,6 +173,11 @@ public class GameCharacter extends LivingObject
 	public void setCollidedState(boolean val)
 	{
 		this._isCollided = val;
+	}
+	
+	public void drawCharacter(Graphics g)
+	{
+		this._animator.drawCharacter(g, this._isRight, this._objBox.x, this._objBox.y);
 	}
 
 }

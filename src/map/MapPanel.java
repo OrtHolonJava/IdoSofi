@@ -17,7 +17,7 @@ import images.Img;
 /**
  * The MapPanel Class -
  */
-public class MapPanel extends JPanel
+public class MapPanel extends JPanel implements Runnable
 {
 	private final int _terrainTSRows = 4, _terrainTSWidth = 5, _objTSLength = 3, _charBoxWidth = 30, _charBoxHeight = 65;
 	private Img _imgBackground;
@@ -116,22 +116,6 @@ public class MapPanel extends JPanel
 	}
 	
 	/**
-	 * Method: Returns the x value of the given block ID.
-	 */
-	private int getBlockX(int id)
-	{
-		return id % this._map.getMapWidth() * Map._blockSize;
-	}
-	
-	/**
-	 * Method: Returns the x value of the given block ID.
-	 */
-	private int getBlockY(int id)
-	{
-		return id / this._map.getMapWidth() * Map._blockSize;
-	}
-	
-	/**
 	 * Method: Sets the current logical state of the game.
 	 */
 	public void setLogic()
@@ -171,7 +155,7 @@ public class MapPanel extends JPanel
 		/**
 		 * Drawing the characters -
 		 */
-		this.drawCharacter(g, this._playerChar);
+		this._playerChar.drawCharacter(g);
 	}
 
 	/**
@@ -261,10 +245,24 @@ public class MapPanel extends JPanel
 		}
 
 	}
-
+	
+	public GameCharacter getMainChar()
+	{
+		return this._playerChar;
+	}
+	
 	public Map getMap()
 	{
-		return _map;
+		return this._map;
+	}
+	
+	/**
+	 * The main game loop method - 
+	 */
+	@Override
+	public void run()
+	{
+		
 	}
 
 }

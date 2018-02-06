@@ -1,7 +1,4 @@
 package map;
-
-import java.util.Timer;
-
 import javax.swing.JFrame;
 
 /**
@@ -20,14 +17,27 @@ public class MapFrame extends JFrame
 		this.setTitle("Link's Scrolls v0.1");
 		this._mapPanel = new MapPanel(mapID ,rows, cols);
 		add(this._mapPanel);
+		
+		/**
+		 * Initializing the game loop -
+		 */
 		FixedTSGameLoop fixedGLoop = new FixedTSGameLoop(this._mapPanel);
 		Thread gLoopThread = new Thread(fixedGLoop);
+		
+		/**
+		 * Setting the frame's settings -
+		 */
 	    setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    setSize(1280, 720);
-	    //setExtendedState(JFrame.MAXIMIZED_BOTH);
-	    //setUndecorated(true);
+	    //setSize(1280, 720);
+	    setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    setUndecorated(true);
 	    setVisible(true);
+	    
+	    /**
+	     * Starting the game -
+	     */
 	    gLoopThread.start();
+	    //fixedGLoop.startGame();
 	}
 }

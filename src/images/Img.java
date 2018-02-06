@@ -40,6 +40,16 @@ public class Img
 	}
 	
 	/**
+	 * Method: Draws the image flipped horizontally.
+	 * @param g
+	 */
+	public void drawImgFlipped(Graphics g) 
+	{
+		Graphics2D g2d = (Graphics2D) g;
+       	g2d.drawImage(_image, _x + _width, _y, -_width, _height, null);
+	}
+	
+	/**
 	 * Method: Sets the image's cords to the given cords.
 	 * @param x
 	 * @param y
