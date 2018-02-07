@@ -11,13 +11,12 @@ import images.Img;
  */
 public class CharacterAnimator implements ActionListener
 {
-	private static final int _walkingFrames = 4, _jumpingFrames = 1, _standingFrames = 4, _spriteWidth = 200, _spriteHeight = 120, _charWidth = 30;
+	private static final int _walkingFrames = 4, _jumpingFrames = 1, _standingFrames = 4, _spriteWidth = 200, _spriteHeight = 120, _charWidth = 30, _timeBetweenFrames = 200;
 	private static final Point _drawerOffset = new Point(115, 35);
 	
 	private Img[] _walkingAnim, _jumpingAnim, _standingAnim, _currentAnim;
 	
 	private int _currFrame;
-	private int _timeBetweenFrames; // Currently not in use.
 	private Timer _timer; // Currently not in use.
 	
 	/**
@@ -26,6 +25,7 @@ public class CharacterAnimator implements ActionListener
 	public CharacterAnimator(int charID)
 	{
 		this._currFrame = 0;
+		this._timer = new Timer(_timeBetweenFrames, this);
 		
 		/**
 		 * Initializing the walking animation frames array -
@@ -54,7 +54,8 @@ public class CharacterAnimator implements ActionListener
 			this._jumpingAnim[i] = new Img(String.format("images\\sprites\\characters\\character%d\\jump\\%d.png", charID, i), 0, 0, _spriteWidth, _spriteHeight);
 		}
 		
-		this._currentAnim = this._standingAnim;
+		this._currentAnim = this._walkingAnim;
+		this._timer.start();
 	}
 	
 	public void drawCharacter(Graphics g, boolean isRight, int charX, int charY)
@@ -71,13 +72,23 @@ public class CharacterAnimator implements ActionListener
 		}
 	}
 	
+	public void setCurrFrame(int frame)
+	{
+		this._currFrame = frame;
+	}
+	
+	public int getCurrFrame()
+	{
+		return this._currFrame;
+	}
+	
 	/**
 	 * The action of the animation timer.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		
+		this._currFrame = (this._currFrame + 1) % this._currentAnim.length;
 	}
 	
 }

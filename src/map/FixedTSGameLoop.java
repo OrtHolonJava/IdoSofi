@@ -1,8 +1,9 @@
 package map;
+
 import javax.swing.SwingUtilities;
 
 /**
- * The Game Loop Class -
+ * The Game Loop Class - (old version, currently not in use)
  */
 public class FixedTSGameLoop implements Runnable
 {
@@ -17,38 +18,37 @@ public class FixedTSGameLoop implements Runnable
 	@Override
 	public void run()
 	{
+		boolean shouldRender = false;
 		long lastTime = System.nanoTime(), now;
 		double nsTick = 1000000000 / _fps, deltaTick = 0;
-		
+
 		while (this._gamePanel.isRunning())
 		{
 			now = System.nanoTime();
 			deltaTick += (now - lastTime) / nsTick;
 			lastTime = now;
-			if (deltaTick >= 1)
+			while (deltaTick >= 1)
 			{
 				tick();
 				render();
 				deltaTick--;
 			}
-			else
+			/**
+			 * Preventing from the loop to over-consume CPU power -
+			 */
+			try
 			{
-				/**
-				 * Preventing from the loop to over-consume CPU power - 
-				 */
-				try
-				{
-					Thread.sleep(1);
-				}
-				catch (InterruptedException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				Thread.sleep(1);
 			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 	}
-	
+
 	private void tick()
 	{
 		/**
@@ -63,5 +63,6 @@ public class FixedTSGameLoop implements Runnable
 		 * Rendering the map panel
 		 */
 		SwingUtilities.invokeLater(() -> _gamePanel.paintImmediately(_gamePanel.getBounds()));
+		//_gamePanel.paintImmediately(_gamePanel.getBounds());
 	}
 }

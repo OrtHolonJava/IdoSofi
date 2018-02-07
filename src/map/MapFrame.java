@@ -21,8 +21,7 @@ public class MapFrame extends JFrame
 		/**
 		 * Initializing the game loop -
 		 */
-		FixedTSGameLoop fixedGLoop = new FixedTSGameLoop(this._mapPanel);
-		Thread gLoopThread = new Thread(fixedGLoop);
+		GameLoop gameLoop = new GameLoop(this._mapPanel);
 		
 		/**
 		 * Setting the frame's settings -
@@ -37,7 +36,6 @@ public class MapFrame extends JFrame
 	    /**
 	     * Starting the game -
 	     */
-	    gLoopThread.start();
-	    //fixedGLoop.startGame();
+	    gameLoop.startGame();
 	}
 }
