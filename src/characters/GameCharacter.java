@@ -14,7 +14,7 @@ public class GameCharacter extends LivingObject
 	/**
 	 * Character's stats -
 	 */
-	private final int _walkingSpeed = 4, _flyingSpeed = 3, _jumpingHeight = 17;
+	private final int _walkingSpeed = 4, _flyingSpeed = 3, _jumpingHeight = 25;
 
 	public GameCharacter(int x, int y, int width, int height, int id)
 	{

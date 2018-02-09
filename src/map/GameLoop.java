@@ -1,5 +1,4 @@
 package map;
-
 import javax.swing.SwingUtilities;
 
 public class GameLoop implements Runnable
@@ -23,7 +22,6 @@ public class GameLoop implements Runnable
 	@Override
 	public void run()
 	{
-		boolean shouldRender = false;
 		double firstTime = 0,
 				lastTime = System.nanoTime() / 1000000000.0,
 				passedTime = 0,
@@ -34,7 +32,6 @@ public class GameLoop implements Runnable
 		
 		while (this._gamePanel.isRunning())
 		{
-			shouldRender = false;
 			firstTime = System.nanoTime() / 1000000000.0;
 			passedTime = firstTime - lastTime;
 			lastTime = firstTime;
@@ -44,7 +41,6 @@ public class GameLoop implements Runnable
 			while (unprocessedTime >= _updateCap)
 			{
 				unprocessedTime -= _updateCap;
-				shouldRender = true;
 				this.tick();
 				
 				if (frameTime >= 1.0)
@@ -56,33 +52,28 @@ public class GameLoop implements Runnable
 				}
 			}
 			
-			if (shouldRender)
+			render();
+			frames++;
+
+			try
 			{
-				render();
-				frames++;
+				Thread.sleep(1);
 			}
-			else
+			catch (InterruptedException e)
 			{
-				try
-				{
-					Thread.sleep(1);
-				}
-				catch (InterruptedException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
 	
 	private void render()
 	{
-		SwingUtilities.invokeLater(() -> _gamePanel.repaint());
+		_gamePanel.paintImmediately(0, 0, this._gamePanel.getWidth(), this._gamePanel.getHeight());
 	}
 	
 	private void tick()
 	{
-		SwingUtilities.invokeLater(() -> _gamePanel.setLogic());
+		_gamePanel.setLogic();
 	}
 }
