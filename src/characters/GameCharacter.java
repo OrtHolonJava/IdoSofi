@@ -4,6 +4,9 @@ import java.awt.Graphics;
 
 import map.Map;
 
+/**
+ * The GameCharacter Class - Represents the main character of the game - 
+ */
 public class GameCharacter extends LivingObject
 {
 	private boolean _isRight, _isCollided;
