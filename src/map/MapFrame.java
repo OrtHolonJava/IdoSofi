@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 public class MapFrame extends JFrame
 {
 	private MapPanel _mapPanel;
+	private GameLoop _gameLoop;
 	
 	/**
 	 * The Constructor Method: 
@@ -21,7 +22,7 @@ public class MapFrame extends JFrame
 		/**
 		 * Initializing the game loop -
 		 */
-		GameLoop gameLoop = new GameLoop(this._mapPanel);
+		_gameLoop = new GameLoop(this._mapPanel);
 		
 		/**
 		 * Setting the frame's settings -
@@ -32,10 +33,10 @@ public class MapFrame extends JFrame
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);
 	    setUndecorated(true);
 	    setVisible(true);
-	    
-	    /**
-	     * Starting the game -
-	     */
-	    gameLoop.startGame();
+	}
+	
+	public void startGame()
+	{
+	    _gameLoop.startGame();
 	}
 }

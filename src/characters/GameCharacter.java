@@ -14,18 +14,18 @@ public class GameCharacter extends LivingObject
 	/**
 	 * Character's stats -
 	 */
-	private final int _walkingSpeed = 4, _flyingSpeed = 3, _jumpingHeight = 25;
+	private final int _walkingSpeed = 4, _flyingSpeed = 3, _jumpingHeight = 17;
 
 	public GameCharacter(int x, int y, int width, int height, int id)
 	{
 		super(x, y, width, height);
 		this._charID = id;
 		this._isRight = this._isGravityApplied = true;
-		this._currState = CharacterState.Falling;
 		this._isCollided = false;
 		this._movementX = 0;
 		this._movementY = 0;
 		this._animator = new CharacterAnimator(this._charID);
+		this.setCurrState(CharacterState.Falling);
 	}
 
 	public void walkRight()
@@ -33,12 +33,11 @@ public class GameCharacter extends LivingObject
 		this._isRight = true;
 		if (this._isCollided)
 		{
-			this._currState = CharacterState.Walking;
+			this.setCurrState(CharacterState.Walking);
 			this._movementX = _walkingSpeed;
 		}
 		else
 		{
-			this._currState = CharacterState.Falling;
 			this._movementX = _flyingSpeed;
 		}
 	}
@@ -48,12 +47,11 @@ public class GameCharacter extends LivingObject
 		this._isRight = false;
 		if (this._isCollided)
 		{
-			this._currState = CharacterState.Walking;
+			this.setCurrState(CharacterState.Walking);
 			this._movementX = -_walkingSpeed;
 		}
 		else
 		{
-			this._currState = CharacterState.Falling;
 			this._movementX = -_flyingSpeed;
 		}
 	}
@@ -80,9 +78,13 @@ public class GameCharacter extends LivingObject
 		return _currState;
 	}
 
-	public void setCurrState(CharacterState currState)
+	private void setCurrState(CharacterState currState)
 	{
-		_currState = currState;
+		if (!currState.equals(this._currState))
+		{
+			_currState = currState;
+			this._animator.setState(currState);
+		}
 	}
 
 	@Override
@@ -106,7 +108,7 @@ public class GameCharacter extends LivingObject
 			{
 				this._movementY += 1;
 			}
-			this._currState = CharacterState.Falling;
+			this.setCurrState(CharacterState.Falling);
 		}
 	}
 
@@ -132,11 +134,7 @@ public class GameCharacter extends LivingObject
 		 */
 		if (this._isCollided)
 		{
-			this._currState = CharacterState.Standing;
-		}
-		else
-		{
-			this._currState = CharacterState.Falling;
+			this.setCurrState(CharacterState.Standing);
 		}
 	}
 
