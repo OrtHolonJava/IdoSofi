@@ -25,9 +25,8 @@ public class Map
 	private HashMap<Integer, ObjectBlock> _objHashMap;
 
 	/**
-	 * The Constructor Method - Initializes an instance of the Map class. Sets
-	 * the map's terrain and objects matrix in accordance to the given XML
-	 * files.
+	 * The Constructor Method - Initializes an instance of the Map class. Sets the
+	 * map's terrain and objects matrix in accordance to the given XML files.
 	 * 
 	 * @param size
 	 * @param sizeW
@@ -99,7 +98,10 @@ public class Map
 							}
 							else
 							{
-								this._objHashMap.put(_counter, new ObjectBlock(Integer.parseInt(node.getNodeValue()), _counter % this._sizeW * _blockSize, _counter / this._sizeW *_blockSize));
+								if (Integer.parseInt(node.getNodeValue()) <= 3) // The current object block code represents a LADDER block
+								{
+									this._objHashMap.put(_counter, new LadderBlock(Integer.parseInt(node.getNodeValue()), _counter % this._sizeW * _blockSize, _counter / this._sizeW *_blockSize, Integer.parseInt(node.getNodeValue()) != 1));
+								}
 							}
 						}
 						this._counter++;

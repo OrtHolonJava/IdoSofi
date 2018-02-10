@@ -6,13 +6,15 @@ import characters.PlayerKeyListener;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 import images.Img;
 
 /**
  * The MapPanel Class -
  */
-public class MapPanel extends JPanel implements Runnable
+public class MapPanel extends JPanel
 {
 	private final int _terrainTSRows = 4, _terrainTSWidth = 5, _objTSLength = 3, _charBoxWidth = 30, _charBoxHeight = 65;
 	private Img _imgBackground;
@@ -96,18 +98,22 @@ public class MapPanel extends JPanel implements Runnable
 		}
 		
 		/**
-		 * Checking for a block under the "right leg" -
+		 * De-effecting the block's effect - 
 		 */
-		tempBlock = this._map.getTerrainHashMap().get(feetBlock + 1);
-		if (tempBlock != null && this._playerChar.getObjBox().x >= 0)
+		this._playerChar.setCollidedState(false);
+	}
+	
+	public void checkObjCollision()
+	{
+		int charBlock = this._playerChar.getMidBlock(this._map.getMapWidth());
+		ObjectBlock tempBlock = this._map.getObjHashMap().get(charBlock);
+		if (tempBlock != null)
 		{
 			tempBlock.affectLivingObj(this._playerChar);
 			return;
 		}
-		/**
-		 * De-effecting the block's effect - 
-		 */
-		this._playerChar.setCollidedState(false);
+		
+		this._playerChar.stopClimbing();
 	}
 	
 	/**
@@ -118,6 +124,7 @@ public class MapPanel extends JPanel implements Runnable
 		this._keyListener.processInput();
 		this._playerChar.setMovement();
 		this.checkTerrainCollision();
+		this.checkObjCollision();
 		this._playerCam.setPosition();
 	}
 
@@ -145,7 +152,7 @@ public class MapPanel extends JPanel implements Runnable
 		 * Drawing the map -
 		 */
 		this.drawMap(g);
-		//this.markBlocks(g);
+		this.markBlocks(g);
 
 		/**
 		 * Drawing the characters -
@@ -249,15 +256,5 @@ public class MapPanel extends JPanel implements Runnable
 	public Map getMap()
 	{
 		return this._map;
-	}
-	
-	/**
-	 * The main game loop method - 
-	 */
-	@Override
-	public void run()
-	{
-		
-	}
-
+	}	
 }

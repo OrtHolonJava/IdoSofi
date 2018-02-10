@@ -2,5 +2,5 @@ package characters;
 
 public enum CharacterState
 {
-	Walking, Standing, Falling;
+	Walking, Standing, Falling, Climbing;
 }

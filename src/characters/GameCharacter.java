@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import map.Map;
 
 /**
- * The GameCharacter Class - Represents the main character of the game - 
+ * The GameCharacter Class - Represents the main character of the game -
  */
 public class GameCharacter extends LivingObject
 {
@@ -13,11 +13,11 @@ public class GameCharacter extends LivingObject
 	private CharacterState _currState;
 	private int _charID;
 	private CharacterAnimator _animator;
-	
+
 	/**
 	 * Character's stats -
 	 */
-	private final int _walkingSpeed = 4, _flyingSpeed = 3, _jumpingHeight = 17;
+	private final int _walkingSpeed = 4, _flyingSpeed = 3, _climbingSpeed = 3, _jumpingHeight = 18;
 
 	public GameCharacter(int x, int y, int width, int height, int id)
 	{
@@ -28,40 +28,46 @@ public class GameCharacter extends LivingObject
 		this._movementX = 0;
 		this._movementY = 0;
 		this._animator = new CharacterAnimator(this._charID);
-		this.setCurrState(CharacterState.Falling);
+		this.setCurrState(CharacterState.Falling); // (Defaultive)
 	}
 
 	public void walkRight()
 	{
-		this._isRight = true;
-		if (this._isCollided)
+		if (this._currState != CharacterState.Climbing)
 		{
-			this.setCurrState(CharacterState.Walking);
-			this._movementX = _walkingSpeed;
-		}
-		else
-		{
-			this._movementX = _flyingSpeed;
+			this._isRight = true;
+			if (this._isCollided)
+			{
+				this.setCurrState(CharacterState.Walking);
+				this._movementX = _walkingSpeed;
+			}
+			else
+			{
+				this._movementX = _flyingSpeed;
+			}
 		}
 	}
 
 	public void walkLeft()
 	{
-		this._isRight = false;
-		if (this._isCollided)
+		if (this._currState != CharacterState.Climbing)
 		{
-			this.setCurrState(CharacterState.Walking);
-			this._movementX = -_walkingSpeed;
-		}
-		else
-		{
-			this._movementX = -_flyingSpeed;
+			this._isRight = false;
+			if (this._isCollided)
+			{
+				this.setCurrState(CharacterState.Walking);
+				this._movementX = -_walkingSpeed;
+			}
+			else
+			{
+				this._movementX = -_flyingSpeed;
+			}
 		}
 	}
 
 	public void jump()
 	{
-		if (this._isCollided)
+		if (this._isCollided && this._currState != CharacterState.Climbing)
 		{
 			this._movementY = -_jumpingHeight;
 			this._isCollided = false;
@@ -81,7 +87,7 @@ public class GameCharacter extends LivingObject
 		return _currState;
 	}
 
-	private void setCurrState(CharacterState currState)
+	public void setCurrState(CharacterState currState)
 	{
 		if (!currState.equals(this._currState))
 		{
@@ -99,7 +105,7 @@ public class GameCharacter extends LivingObject
 	@Override
 	public void applyGravity()
 	{
-		if (this._isCollided)
+		if (this._isCollided || this._currState == CharacterState.Climbing)
 		{
 			this._movementY = 0;
 			this._isGravityApplied = false;
@@ -118,19 +124,20 @@ public class GameCharacter extends LivingObject
 	/**
 	 * Method: Whenever the player is not actively moving on the horizontal axis
 	 */
-	private void stopHorizontalMovement()
+	public void stopHorizontalMovement()
 	{
-		if (this._movementX > 0)
-		{
-			this._movementX--;
-		}
-		else if (this._movementX < 0)
-		{
-			this._movementX++;
-		}
+		this._movementX = 0;
+	}
+	
+	/**
+	 * Method: Whenever the player is not actively moving on the vertical axis
+	 */
+	public void stopVerticalMovement()
+	{
+		this._movementX = 0;
 	}
 
-	private void deEffectXMovement()
+	private void deEffectMovement()
 	{
 		/**
 		 * Reset character status -
@@ -139,22 +146,58 @@ public class GameCharacter extends LivingObject
 		{
 			this.setCurrState(CharacterState.Standing);
 		}
+		else
+		{
+			this.setCurrState(CharacterState.Falling);
+		}
 	}
-
-	public void stopWalking()
+	
+	public void stopBeingActive()
 	{
-		this.deEffectXMovement();
+		this.deEffectMovement();
 		this.stopHorizontalMovement();
 	}
-
+	
+	public void stopClimbing()
+	{
+		if (this._currState == CharacterState.Climbing)
+		{
+			System.out.println("stop");
+			this.stopVerticalMovement();
+			stopBeingActive();
+		}
+	}
+	
 	/**
 	 * Method - Returns the map cell ID in which the character's feet are located.
 	 */
 	public int getFeetBlock(int mapWidth)
 	{
-		return this._objBox.x / Map._blockSize + (this._objBox.y + this._objBox.height) / Map._blockSize * mapWidth;
+		return (this._objBox.x + Map._blockSize / 2) / Map._blockSize + (this._objBox.y + this._objBox.height) / Map._blockSize * mapWidth;
 	}
 
+	/**
+	 * Method - Returns the map cell ID in which the character's head is located.
+	 */
+	public int getHeadBlock(int mapWidth)
+	{
+		return (this._objBox.x + Map._blockSize / 2) / Map._blockSize + this._objBox.y / Map._blockSize * mapWidth;
+	}
+	
+	/**
+	 * Method - Returns the map cell ID in which the character's head is located.
+	 */
+	public int getMidBlock(int mapWidth)
+	{
+		return (this._objBox.x + Map._blockSize / 2) / Map._blockSize + (this._objBox.y + this._objBox.height - Map._blockSize) / Map._blockSize * mapWidth;
+	}
+	
+	
+	public int getClimbingSpeed()
+	{
+		return this._climbingSpeed;
+	}
+	
 	public boolean isRight()
 	{
 		return _isRight;
@@ -175,7 +218,7 @@ public class GameCharacter extends LivingObject
 	{
 		this._isCollided = val;
 	}
-	
+
 	public void drawCharacter(Graphics g)
 	{
 		this._animator.drawCharacter(g, this._isRight, this._objBox.x, this._objBox.y);

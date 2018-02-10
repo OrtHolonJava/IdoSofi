@@ -1,7 +1,5 @@
 package map;
 
-import characters.LivingObject;
-
 /**
  * The Block Class -
  */
@@ -32,14 +30,6 @@ public abstract class Block
 	{
 		return this._tile;
 	}
-
-	/**
-	 * Abstract Method - The effect a collision with the block causes. Each
-	 * variation of block implements it in its own way.
-	 * 
-	 * @param obj
-	 */
-	public abstract void affectLivingObj(LivingObject obj);
 
 	/**
 	 * The toString Method

@@ -1,7 +1,5 @@
 package map;
 
-import javax.swing.SwingUtilities;
-
 public class GameLoop implements Runnable
 {
 	private Thread _gameThread;
@@ -38,10 +36,12 @@ public class GameLoop implements Runnable
 			unprocessedTime += passedTime;
 			frameTime += passedTime;
 			
-			while (unprocessedTime >= _updateCap)
+			if (unprocessedTime >= _updateCap)
 			{
 				unprocessedTime -= _updateCap;
-				this.tick();
+				tick();
+				render();
+				frames++;
 				
 				if (frameTime >= 1.0)
 				{
@@ -52,8 +52,6 @@ public class GameLoop implements Runnable
 				}
 			}
 			
-			render();
-			frames++;
 			
 			/**
 			 * Preventing over-consumption of the computer's CPU power -
@@ -72,7 +70,6 @@ public class GameLoop implements Runnable
 	
 	private void render()
 	{
-		//_gamePanel.paintImmediately(0, 0, this._gamePanel.getWidth(), this._gamePanel.getHeight());
 		_gamePanel.repaint();
 	}
 	

@@ -6,8 +6,8 @@ import java.awt.event.KeyListener;
 public class PlayerKeyListener implements KeyListener
 {
 	private GameCharacter _char;
-	private boolean[] _pressedKeys;
-	private static final int KEY_A = 0, KEY_D = 1, CONTINUOUS_INPUT_KEYS = 2;
+	private static boolean[] _pressedKeys;
+	public static final int KEY_LEFT = 0, KEY_RIGHT = 1, KEY_UP = 2, CONTINUOUS_INPUT_KEYS = 3;
 
 	public PlayerKeyListener(GameCharacter ch)
 	{
@@ -18,20 +18,25 @@ public class PlayerKeyListener implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		if (e.getKeyCode() == KeyEvent.VK_A)
+		if (e.getKeyCode() == KeyEvent.VK_LEFT)
 		{
-			this._pressedKeys[KEY_A] = true;
+			_pressedKeys[KEY_LEFT] = true;
 		}
 
-		else if (e.getKeyCode() == KeyEvent.VK_D)
+		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 		{
-			this._pressedKeys[KEY_D] = true;
+			_pressedKeys[KEY_RIGHT] = true;
+		}
+		
+		else if (e.getKeyCode() == KeyEvent.VK_UP)
+		{
+			_pressedKeys[KEY_UP] = true;
 		}
 
 		/**
 		 * Handle momentary input -
 		 */
-		if (e.getKeyCode() == KeyEvent.VK_W)
+		if (e.getKeyCode() == KeyEvent.VK_Z)
 		{
 			this._char.jump();
 		}
@@ -41,14 +46,19 @@ public class PlayerKeyListener implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		if (e.getKeyCode() == KeyEvent.VK_A)
+		if (e.getKeyCode() == KeyEvent.VK_LEFT)
 		{
-			this._pressedKeys[KEY_A] = false;
+			_pressedKeys[KEY_LEFT] = false;
 		}
 
-		else if (e.getKeyCode() == KeyEvent.VK_D)
+		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 		{
-			this._pressedKeys[KEY_D] = false;
+			_pressedKeys[KEY_RIGHT] = false;
+		}
+		
+		else if (e.getKeyCode() == KeyEvent.VK_UP)
+		{
+			_pressedKeys[KEY_UP] = false;
 		}
 	}
 
@@ -60,28 +70,33 @@ public class PlayerKeyListener implements KeyListener
 		/**
 		 * Walking -
 		 */
-		if (this._pressedKeys[KEY_A] || this._pressedKeys[KEY_D])
+		if (_pressedKeys[KEY_LEFT])
 		{
-			if (this._pressedKeys[KEY_A])
-			{
-				this._char.walkLeft();
-			}
-			if (this._pressedKeys[KEY_D])
-			{
-				this._char.walkRight();
-			}
+			this._char.walkLeft();
+		}
+		else if (_pressedKeys[KEY_RIGHT])
+		{
+			this._char.walkRight();
+		}
+		else if (_pressedKeys[KEY_UP])
+		{
+			
 		}
 		else
 		{
-			this._char.stopWalking();
+			this._char.stopBeingActive();
 		}
-
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0)
 	{
 
+	}
+	
+	public static boolean[] getPressedKeys()
+	{
+		return _pressedKeys;
 	}
 
 }

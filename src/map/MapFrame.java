@@ -29,9 +29,9 @@ public class MapFrame extends JFrame
 		 */
 	    setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    //setSize(1280, 720);
-	    setExtendedState(JFrame.MAXIMIZED_BOTH);
-	    setUndecorated(true);
+	    setSize(1280, 720);
+	    //setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    //setUndecorated(true);
 	    setVisible(true);
 	}
 	

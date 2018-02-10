@@ -13,7 +13,6 @@ public class TerrainBlock extends Block
 		this._isFloor = floor;
 	}
 
-	@Override
 	public void affectLivingObj(LivingObject obj)
 	{
 		if (this._isFloor)
