@@ -136,7 +136,10 @@ public class GameCharacter extends LivingObject
 	{
 		this._movementX = 0;
 	}
-
+	
+	/**
+	 * Sets the relevant state whenever the character is not actively moving
+	 */
 	private void deEffectMovement()
 	{
 		/**
@@ -152,7 +155,7 @@ public class GameCharacter extends LivingObject
 		}
 	}
 	
-	public void stopBeingActive()
+	public void stopWalking()
 	{
 		this.deEffectMovement();
 		this.stopHorizontalMovement();
@@ -162,9 +165,8 @@ public class GameCharacter extends LivingObject
 	{
 		if (this._currState == CharacterState.Climbing)
 		{
-			System.out.println("stop");
+			this.deEffectMovement();
 			this.stopVerticalMovement();
-			stopBeingActive();
 		}
 	}
 	
@@ -216,6 +218,12 @@ public class GameCharacter extends LivingObject
 	@Override
 	public void setCollidedState(boolean val)
 	{
+		if (this._isCollided == false && val) // If the character has just landed.
+		{
+			System.out.println("LANDED");
+			this._isCollided = val;
+			this.deEffectMovement();
+		}
 		this._isCollided = val;
 	}
 
@@ -223,5 +231,4 @@ public class GameCharacter extends LivingObject
 	{
 		this._animator.drawCharacter(g, this._isRight, this._objBox.x, this._objBox.y);
 	}
-
 }

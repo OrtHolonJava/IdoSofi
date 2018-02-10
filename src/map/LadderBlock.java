@@ -6,7 +6,7 @@ import characters.PlayerKeyListener;
 
 public class LadderBlock extends ObjectBlock
 {
-	private final int _initialPositioning = 10;
+	private final int _initialPositioning = 4;
 	private boolean _initializer;
 
 	public LadderBlock(int tile, int x, int y, boolean init)

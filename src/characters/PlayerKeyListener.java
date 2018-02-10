@@ -46,19 +46,28 @@ public class PlayerKeyListener implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
+		/**
+		 * Stop walking - 
+		 */
 		if (e.getKeyCode() == KeyEvent.VK_LEFT)
 		{
 			_pressedKeys[KEY_LEFT] = false;
+			this._char.stopWalking();
 		}
 
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 		{
 			_pressedKeys[KEY_RIGHT] = false;
+			this._char.stopWalking();
 		}
 		
+		/**
+		 * Stop climbing;
+		 */
 		else if (e.getKeyCode() == KeyEvent.VK_UP)
 		{
 			_pressedKeys[KEY_UP] = false;
+			this._char.stopClimbing();
 		}
 	}
 
@@ -77,14 +86,6 @@ public class PlayerKeyListener implements KeyListener
 		else if (_pressedKeys[KEY_RIGHT])
 		{
 			this._char.walkRight();
-		}
-		else if (_pressedKeys[KEY_UP])
-		{
-			
-		}
-		else
-		{
-			this._char.stopBeingActive();
 		}
 	}
 
