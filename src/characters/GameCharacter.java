@@ -134,7 +134,7 @@ public class GameCharacter extends LivingObject
 	 */
 	public void stopVerticalMovement()
 	{
-		this._movementX = 0;
+		this._movementY = 0;
 	}
 	
 	/**
@@ -220,7 +220,6 @@ public class GameCharacter extends LivingObject
 	{
 		if (this._isCollided == false && val) // If the character has just landed.
 		{
-			System.out.println("LANDED");
 			this._isCollided = val;
 			this.deEffectMovement();
 		}

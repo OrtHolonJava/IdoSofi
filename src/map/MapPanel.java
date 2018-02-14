@@ -152,7 +152,7 @@ public class MapPanel extends JPanel
 		 * Drawing the map -
 		 */
 		this.drawMap(g);
-		this.markBlocks(g);
+		//this.markBlocks(g);
 
 		/**
 		 * Drawing the characters -

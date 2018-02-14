@@ -24,6 +24,7 @@ public class LadderBlock extends ObjectBlock
 			{
 				if (this._initializer)
 				{
+					gc.setCollidedState(false);
 					gc.setCurrState(CharacterState.Climbing);
 					gc.setPosition(this._x, gc.getObjBox().y - _initialPositioning);
 				}

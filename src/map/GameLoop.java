@@ -6,18 +6,33 @@ public class GameLoop implements Runnable
 	private MapPanel _gamePanel;
 	private final double _updateCap = 1.0 / 60.0;
 	private int _fps;
-	
+
 	public GameLoop(MapPanel panel)
 	{
 		this._gamePanel = panel;
 	}
-	
+
 	public void startGame()
 	{
 		this._gameThread = new Thread(this);
 		this._gameThread.start();
+		
+		/**
+		 * Forcing it to use the high resolution timer, making the sleep call within the game loop much more accurate.
+		 */
+		new Thread()
+		{
+		    public void run() 
+		    {
+		        try
+		        {
+		            Thread.sleep(Long.MAX_VALUE);
+		        }
+		        catch(Exception exc) {}
+		    }
+		}.start();
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -27,7 +42,7 @@ public class GameLoop implements Runnable
 				unprocessedTime = 0,
 				frameTime = 0;
 		int frames = 0;
-		
+
 		while (this._gamePanel.isRunning())
 		{
 			firstTime = System.nanoTime() / 1000000000.0;
@@ -35,14 +50,14 @@ public class GameLoop implements Runnable
 			lastTime = firstTime;
 			unprocessedTime += passedTime;
 			frameTime += passedTime;
-			
+
 			if (unprocessedTime >= _updateCap)
 			{
 				unprocessedTime -= _updateCap;
 				tick();
 				render();
 				frames++;
-				
+
 				if (frameTime >= 1.0)
 				{
 					frameTime = 0;
@@ -51,8 +66,7 @@ public class GameLoop implements Runnable
 					System.out.println("FPS: " + _fps);
 				}
 			}
-			
-			
+
 			/**
 			 * Preventing over-consumption of the computer's CPU power -
 			 */
@@ -67,12 +81,12 @@ public class GameLoop implements Runnable
 			}
 		}
 	}
-	
+
 	private void render()
 	{
 		_gamePanel.repaint();
 	}
-	
+
 	private void tick()
 	{
 		_gamePanel.setLogic();
