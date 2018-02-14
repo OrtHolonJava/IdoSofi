@@ -20,17 +20,17 @@ public class GameLoop implements Runnable
 		/**
 		 * Forcing it to use the high resolution timer, making the sleep call within the game loop much more accurate.
 		 */
-		new Thread()
-		{
-		    public void run() 
-		    {
-		        try
-		        {
-		            Thread.sleep(Long.MAX_VALUE);
-		        }
-		        catch(Exception exc) {}
-		    }
-		}.start();
+//		new Thread()
+//		{
+//		    public void run() 
+//		    {
+//		        try
+//		        {
+//		            Thread.sleep(Long.MAX_VALUE);
+//		        }
+//		        catch(Exception exc) {}
+//		    }
+//		}.start();
 	}
 
 	@Override
