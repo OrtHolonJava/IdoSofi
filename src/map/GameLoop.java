@@ -15,22 +15,26 @@ public class GameLoop implements Runnable
 	public void startGame()
 	{
 		this._gameThread = new Thread(this);
+		_gameThread.setDaemon(true);
 		this._gameThread.start();
 		
 		/**
 		 * Forcing it to use the high resolution timer, making the sleep call within the game loop much more accurate.
 		 */
-//		new Thread()
-//		{
-//		    public void run() 
-//		    {
-//		        try
-//		        {
-//		            Thread.sleep(Long.MAX_VALUE);
-//		        }
-//		        catch(Exception exc) {}
-//		    }
-//		}.start();
+		new Thread()
+		{
+		    public void run() 
+		    {
+		        try
+		        {
+		            Thread.sleep(Long.MAX_VALUE);
+		        }
+		        catch(Exception exc)
+		        {
+		        	
+		        }
+		    }
+		}.start();
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public class GameLoop implements Runnable
 			catch (InterruptedException e)
 			{
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}

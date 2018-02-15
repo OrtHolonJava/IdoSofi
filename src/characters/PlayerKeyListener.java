@@ -12,7 +12,7 @@ public class PlayerKeyListener implements KeyListener
 	public PlayerKeyListener(GameCharacter ch)
 	{
 		this._char = ch;
-		this._pressedKeys = new boolean[CONTINUOUS_INPUT_KEYS];
+		_pressedKeys = new boolean[CONTINUOUS_INPUT_KEYS];
 	}
 
 	@Override

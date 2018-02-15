@@ -18,7 +18,6 @@ public class FixedTSGameLoop implements Runnable
 	@Override
 	public void run()
 	{
-		boolean shouldRender = false;
 		long lastTime = System.nanoTime(), now;
 		double nsTick = 1000000000 / _fps, deltaTick = 0;
 
