@@ -1,11 +1,21 @@
 package map;
 
+import javax.swing.SwingUtilities;
+
 public class GameLoop implements Runnable
 {
 	private Thread _gameThread;
 	private MapPanel _gamePanel;
-	private final double _updateCap = 1.0 / 60.0;
-	private int _fps;
+	
+	/**
+	 * Game loop numeric finals:
+	 */
+	private final double _ups = 60.0,
+			_timeBetweenUpdates = 1000000000 / _ups,
+			_targetFPS = 60,
+			_timeBetweenRenders = 1000000000 / _targetFPS;
+	
+	private final int _maxUpdatesBeforeRender = 5;
 
 	public GameLoop(MapPanel panel)
 	{
@@ -17,82 +27,95 @@ public class GameLoop implements Runnable
 		this._gameThread = new Thread(this);
 		_gameThread.setDaemon(true);
 		this._gameThread.start();
-		
-		/**
-		 * Forcing it to use the high resolution timer, making the sleep call within the game loop much more accurate.
-		 */
-		new Thread()
-		{
-		    public void run() 
-		    {
-		        try
-		        {
-		            Thread.sleep(Long.MAX_VALUE);
-		        }
-		        catch(Exception exc)
-		        {
-		        	
-		        }
-		    }
-		}.start();
 	}
 
 	@Override
 	public void run()
 	{
-		double firstTime = 0,
-				lastTime = System.nanoTime() / 1000000000.0,
-				passedTime = 0,
-				unprocessedTime = 0,
-				frameTime = 0;
-		int frames = 0;
-
+		/**
+		 * New version -
+		 */
+		
+		double lastUpdateTime = System.nanoTime(); // Store the time of the last update call.
+		double lastRenderTime = System.nanoTime(); // Store the time of the last render call.
+		double now;
+		int updateCount;
+		
+		/**
+		 * FPS Calculation Variables
+		 */
+		int lastSecondTime = (int) (lastUpdateTime / 1000000000);
+		int frameCount = 0;
+		
 		while (this._gamePanel.isRunning())
 		{
-			firstTime = System.nanoTime() / 1000000000.0;
-			passedTime = firstTime - lastTime;
-			lastTime = firstTime;
-			unprocessedTime += passedTime;
-			frameTime += passedTime;
-
-			if (unprocessedTime >= _updateCap)
+			now = System.nanoTime();
+			updateCount = 0;
+			
+			/**
+			 * Doing as many game updates as we currently need to.
+			 */
+			while (now - lastUpdateTime > _timeBetweenUpdates && updateCount < _maxUpdatesBeforeRender)
 			{
-				unprocessedTime -= _updateCap;
-				tick();
-				render();
-				frames++;
+				this.tick();
+				lastUpdateTime += _timeBetweenUpdates;
+				updateCount++;
+			}
 
-				if (frameTime >= 1.0)
-				{
-					frameTime = 0;
-					_fps = frames;
-					frames = 0;
-					System.out.println("FPS: " + _fps);
-				}
+			//If for some reason an update takes forever, we don't want to do an insane number of catchups.
+			//If you were doing some sort of game that needed to keep EXACT time, you would get rid of this.
+			if (now - lastUpdateTime > _timeBetweenUpdates)
+			{
+				lastUpdateTime = now - _timeBetweenUpdates;
+			}
+			
+			/**
+			 * Render the current (updated) state of the game.
+			 */
+			this.render();
+			frameCount++;
+			lastRenderTime = now;
+
+			//Update the frames we got.
+			int thisSecond = (int) (lastUpdateTime / 1000000000);
+			if (thisSecond > lastSecondTime)
+			{
+				System.out.println("FPS: " + frameCount);
+				frameCount = 0;
+				lastSecondTime = thisSecond;
 			}
 
 			/**
-			 * Preventing over-consumption of the computer's CPU power -
+			 * The timing mechanism.
+			 * The thread sleeps within this while loop until enough time has passed and another update or render call is required.
 			 */
-			try
+			while (now - lastRenderTime < _timeBetweenRenders && now - lastUpdateTime < _timeBetweenUpdates)
 			{
-				Thread.sleep(1);
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				Thread.yield(); //Yield until it has been at least the target time between renders. This saves the CPU from hogging.
+				
+				/**
+				 * Preventing over-consumption of the system's CPU power.
+				 */
+				try
+				{
+					Thread.sleep(1);
+				}
+				catch (Exception e)
+				{
+				}
+				
+				now = System.nanoTime();
 			}
 		}
 	}
 
 	private void render()
 	{
-		_gamePanel.repaint();
+		SwingUtilities.invokeLater(() -> _gamePanel.repaint());
 	}
 
 	private void tick()
 	{
-		_gamePanel.setLogic();
+		SwingUtilities.invokeLater(() -> _gamePanel.setLogic());
 	}
 }

@@ -12,7 +12,7 @@ import images.Img;
 public class CharacterAnimator implements ActionListener
 {
 	private static final int _walkingFrames = 4, _jumpingFrames = 1, _standingFrames = 4, _climbingFrames = 2, _spriteWidth = 200, _spriteHeight = 120, _charWidth = 30;
-	private static final int[] _animationDelays = {100, 700, 0, 180};
+	private static final int[] _animationDelays = {200, 700, 0, 180};
 	private static final Point _drawerOffset = new Point(115, 35);
 	private Img[] _walkingAnim, _jumpingAnim, _standingAnim, _climbingAnim, _currentAnim;
 	private Img[][] _animations;
