@@ -1,6 +1,4 @@
 package map;
-import java.nio.charset.MalformedInputException;
-
 import javax.swing.JFrame;
 
 /**
@@ -20,11 +18,12 @@ public class MapFrame extends JFrame implements MenuPanelListener
 	{
 		this.setTitle("Link's Scrolls");
 		this._menuPanel = new MenuPanel();
+		this._menuPanel.addListener(this);
 		this.add(_menuPanel);
 		setFrameSettings();
 	}
 	
-	public void startGame()
+	private void startGame()
 	{
 	    _gameLoop.startGame();
 	}
@@ -42,18 +41,22 @@ public class MapFrame extends JFrame implements MenuPanelListener
 	    setVisible(true);
 	}
 	
-	
+	private void removeMainMenu()
+	{
+		this.getContentPane().remove(this._menuPanel);
+	}
 	
 	@Override
 	public void mapHasBeenChosen(int mapID)
 	{
-		// TODO Auto-generated method stub
+		removeMainMenu();
+		
 		this._mapPanel = new MapPanel(mapID, 40, 69); // TEMP
 		add(this._mapPanel);
+		this._mapPanel.requestFocusInWindow();
+		revalidate();
 		
-		/**
-		 * Initializing the game loop -
-		 */
 		_gameLoop = new GameLoop(this._mapPanel);
+		startGame();
 	}
 }

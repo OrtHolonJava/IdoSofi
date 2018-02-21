@@ -9,5 +9,4 @@ public class Main
 	{
 		MapFrame gameFrame = new MapFrame(1, 40, 69);
 	}
-
 }

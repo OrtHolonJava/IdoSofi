@@ -35,7 +35,7 @@ public class MapPanel extends JPanel
 	public MapPanel(int mapID, int rows, int cols)
 	{
 		this._imgBackground = new Img(String.format("images\\backgrounds\\bgMap%d.png", mapID), 0, 0, 1920, 1080);
-		this.setFocusable(true);
+		
 		/**
 		 * Initializing the instance of the map logic.
 		 */
