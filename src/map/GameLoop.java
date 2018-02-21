@@ -12,10 +12,10 @@ public class GameLoop implements Runnable
 	 */
 	private final double _ups = 60.0,
 			_timeBetweenUpdates = 1000000000 / _ups,
-			_targetFPS = 60,
+			_targetFPS = 60.0,
 			_timeBetweenRenders = 1000000000 / _targetFPS;
 	
-	private final int _maxUpdatesBeforeRender = 5;
+	private final int _maxUpdatesBeforeRender = 1;
 
 	public GameLoop(MapPanel panel)
 	{
@@ -112,6 +112,7 @@ public class GameLoop implements Runnable
 	private void render()
 	{
 		SwingUtilities.invokeLater(() -> _gamePanel.repaint());
+		//SwingUtilities.invokeLater(() -> _gamePanel.paintImmediately(_gamePanel.getBounds()));
 	}
 
 	private void tick()

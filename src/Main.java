@@ -5,11 +5,9 @@ import map.*;
  */
 public class Main
 {
-
 	public static void main(String[] args)
 	{
 		MapFrame gameFrame = new MapFrame(1, 40, 69);
-		gameFrame.startGame();
 	}
 
 }

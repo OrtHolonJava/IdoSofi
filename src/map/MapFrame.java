@@ -1,11 +1,14 @@
 package map;
+import java.nio.charset.MalformedInputException;
+
 import javax.swing.JFrame;
 
 /**
  * The MapFrame Class - 
  */
-public class MapFrame extends JFrame
+public class MapFrame extends JFrame implements MenuPanelListener
 {
+	private MenuPanel _menuPanel;
 	private MapPanel _mapPanel;
 	private GameLoop _gameLoop;
 	
@@ -15,18 +18,22 @@ public class MapFrame extends JFrame
 	 */
 	public MapFrame(int mapID ,int rows, int cols)
 	{
-		this.setTitle("Link's Scrolls v0.1");
-		this._mapPanel = new MapPanel(mapID ,rows, cols);
-		add(this._mapPanel);
-		
-		/**
-		 * Initializing the game loop -
-		 */
-		_gameLoop = new GameLoop(this._mapPanel);
-		
-		/**
-		 * Setting the frame's settings -
-		 */
+		this.setTitle("Link's Scrolls");
+		this._menuPanel = new MenuPanel();
+		this.add(_menuPanel);
+		setFrameSettings();
+	}
+	
+	public void startGame()
+	{
+	    _gameLoop.startGame();
+	}
+	
+	/**
+	 * Method: Setting the JFrame's settings -
+	 */
+	private void setFrameSettings()
+	{
 	    setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    //setSize(1280, 720);
@@ -35,8 +42,18 @@ public class MapFrame extends JFrame
 	    setVisible(true);
 	}
 	
-	public void startGame()
+	
+	
+	@Override
+	public void mapHasBeenChosen(int mapID)
 	{
-	    _gameLoop.startGame();
+		// TODO Auto-generated method stub
+		this._mapPanel = new MapPanel(mapID, 40, 69); // TEMP
+		add(this._mapPanel);
+		
+		/**
+		 * Initializing the game loop -
+		 */
+		_gameLoop = new GameLoop(this._mapPanel);
 	}
 }
