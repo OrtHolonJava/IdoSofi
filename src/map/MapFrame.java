@@ -17,6 +17,7 @@ public class MapFrame extends JFrame implements MenuPanelListener
 	public MapFrame(int mapID ,int rows, int cols)
 	{
 		this.setTitle("Link's Scrolls");
+		
 		this._menuPanel = new MenuPanel();
 		this._menuPanel.addListener(this);
 		this.add(_menuPanel);
@@ -35,7 +36,6 @@ public class MapFrame extends JFrame implements MenuPanelListener
 	{
 	    setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    //setSize(1280, 720);
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);
 	    setUndecorated(true);
 	    setVisible(true);

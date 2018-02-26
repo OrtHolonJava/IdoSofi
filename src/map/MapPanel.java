@@ -69,7 +69,8 @@ public class MapPanel extends JPanel
 		this._playerCam = new PlayerCamera(this._playerChar, 2f, this);
 		this._keyListener = new PlayerKeyListener(this._playerChar);
 		this.addKeyListener(this._keyListener);
-
+		this.setOpaque(false);
+		
 		/**
 		 * The game is now at a running state.
 		 */

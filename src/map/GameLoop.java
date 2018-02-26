@@ -1,5 +1,4 @@
 package map;
-
 import javax.swing.SwingUtilities;
 
 public class GameLoop implements Runnable
@@ -12,21 +11,14 @@ public class GameLoop implements Runnable
 	 */
 	private final double _ups = 60.0,
 			_timeBetweenUpdates = 1000000000 / _ups,
-			_targetFPS = 60.0,
+			_targetFPS = 60,
 			_timeBetweenRenders = 1000000000 / _targetFPS;
 	
-	private final int _maxUpdatesBeforeRender = 1;
+	private final int _maxUpdatesBeforeRender = 5;
 
 	public GameLoop(MapPanel panel)
 	{
 		this._gamePanel = panel;
-	}
-
-	public void startGame()
-	{
-		this._gameThread = new Thread(this);
-		_gameThread.setDaemon(true);
-		this._gameThread.start();
 	}
 
 	@Override
@@ -61,13 +53,6 @@ public class GameLoop implements Runnable
 				lastUpdateTime += _timeBetweenUpdates;
 				updateCount++;
 			}
-
-			//If for some reason an update takes forever, we don't want to do an insane number of catchups.
-			//If you were doing some sort of game that needed to keep EXACT time, you would get rid of this.
-			if (now - lastUpdateTime > _timeBetweenUpdates)
-			{
-				lastUpdateTime = now - _timeBetweenUpdates;
-			}
 			
 			/**
 			 * Render the current (updated) state of the game.
@@ -80,7 +65,7 @@ public class GameLoop implements Runnable
 			int thisSecond = (int) (lastUpdateTime / 1000000000);
 			if (thisSecond > lastSecondTime)
 			{
-				System.out.println("FPS: " + frameCount);
+				//System.out.println("FPS: " + frameCount);
 				frameCount = 0;
 				lastSecondTime = thisSecond;
 			}
@@ -103,7 +88,6 @@ public class GameLoop implements Runnable
 				catch (Exception e)
 				{
 				}
-				
 				now = System.nanoTime();
 			}
 		}
@@ -112,11 +96,17 @@ public class GameLoop implements Runnable
 	private void render()
 	{
 		SwingUtilities.invokeLater(() -> _gamePanel.repaint());
-		//SwingUtilities.invokeLater(() -> _gamePanel.paintImmediately(_gamePanel.getBounds()));
 	}
 
 	private void tick()
 	{
 		SwingUtilities.invokeLater(() -> _gamePanel.setLogic());
+	}
+	
+	public void startGame()
+	{
+		this._gameThread = new Thread(this);
+		_gameThread.setDaemon(true);
+		this._gameThread.start();
 	}
 }

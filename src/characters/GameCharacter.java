@@ -74,14 +74,6 @@ public class GameCharacter extends LivingObject
 		}
 	}
 
-	@Override
-	public void setMovement()
-	{
-		this._objBox.x += this._movementX;
-		this._objBox.y += this._movementY;
-		this.applyGravity();
-	}
-
 	public CharacterState getCurrState()
 	{
 		return _currState;
@@ -157,8 +149,11 @@ public class GameCharacter extends LivingObject
 	
 	public void stopWalking()
 	{
-		this.deEffectMovement();
-		this.stopHorizontalMovement();
+		if (this._currState == CharacterState.Walking || this._currState == CharacterState.Falling)
+		{
+			this.deEffectMovement();
+			this.stopHorizontalMovement();
+		}
 	}
 	
 	public void stopClimbing()

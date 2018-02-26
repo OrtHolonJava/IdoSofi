@@ -18,8 +18,14 @@ public abstract class LivingObject implements Gravity
 		this._movementY = 0;
 	}
 	
-	public abstract void setMovement();
 	public abstract void setCollidedState(boolean val);
+	
+	public  void setMovement()
+	{
+		this._objBox.x += this._movementX;
+		this._objBox.y += this._movementY;
+		this.applyGravity();
+	}
 	
 	/**
 	 * Getters and setters - 
