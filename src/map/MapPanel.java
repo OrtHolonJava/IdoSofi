@@ -128,7 +128,6 @@ public class MapPanel extends JPanel
 
 	/**
 	 * Method: Draws everything onto the panel.
-	 * 
 	 * @param g
 	 */
 	public void paintComponent(Graphics g)

@@ -30,7 +30,7 @@ public class LadderBlock extends ObjectBlock
 				}
 				return;
 			}
-			else
+			else // Mid-climbing. Lift the character as needed.
 			{
 				gc.setPosition(this._x, gc.getObjBox().y - gc.getClimbingSpeed());
 			}
