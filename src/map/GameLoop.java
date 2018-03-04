@@ -65,7 +65,7 @@ public class GameLoop implements Runnable
 			int thisSecond = (int) (lastUpdateTime / 1000000000);
 			if (thisSecond > lastSecondTime)
 			{
-				//System.out.println("FPS: " + frameCount);
+				System.out.println("FPS: " + frameCount);
 				frameCount = 0;
 				lastSecondTime = thisSecond;
 			}
