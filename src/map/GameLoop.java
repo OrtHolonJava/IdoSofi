@@ -45,7 +45,7 @@ public class GameLoop implements Runnable
 			updateCount = 0;
 			
 			/**
-			 * Doing as many game updates as we currently need to.
+			 * Doing as many game updates as we currently need to -
 			 */
 			while (now - lastUpdateTime > _timeBetweenUpdates && updateCount < _maxUpdatesBeforeRender)
 			{
