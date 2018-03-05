@@ -14,7 +14,7 @@ public class GameLoop implements Runnable
 			_targetFPS = 60,
 			_timeBetweenRenders = 1000000000 / _targetFPS;
 	
-	private final int _maxUpdatesBeforeRender = 5;
+	private final int _maxUpdatesBeforeRender = 1;
 
 	public GameLoop(MapPanel panel)
 	{
@@ -65,7 +65,7 @@ public class GameLoop implements Runnable
 			int thisSecond = (int) (lastUpdateTime / 1000000000);
 			if (thisSecond > lastSecondTime)
 			{
-				System.out.println("FPS: " + frameCount);
+				//System.out.println("FPS: " + frameCount);
 				frameCount = 0;
 				lastSecondTime = thisSecond;
 			}

@@ -19,6 +19,7 @@ public abstract class LivingObject implements Gravity
 	}
 	
 	public abstract void setCollidedState(boolean val);
+	public abstract void update();
 	
 	public  void setMovement()
 	{
@@ -26,6 +27,7 @@ public abstract class LivingObject implements Gravity
 		this._objBox.y += this._movementY;
 		this.applyGravity();
 	}
+	
 	
 	/**
 	 * Getters and setters - 

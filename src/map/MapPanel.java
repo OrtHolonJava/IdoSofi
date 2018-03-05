@@ -1,5 +1,7 @@
 package map;
 import javax.swing.JPanel;
+
+import characters.Animation;
 import characters.GameCharacter;
 import characters.PlayerCamera;
 import characters.PlayerKeyListener;
@@ -75,6 +77,7 @@ public class MapPanel extends JPanel
 		 * The game is now at a running state.
 		 */
 		this._isRunning = true;
+		Animation.startUniversalTimer();
 	}
 
 	public boolean isRunning()
@@ -120,7 +123,7 @@ public class MapPanel extends JPanel
 	public void setLogic()
 	{
 		this._keyListener.processInput();
-		this._playerChar.setMovement();
+		this._playerChar.update();
 		this.checkTerrainCollision();
 		this.checkObjCollision();
 		this._playerCam.setPosition();
@@ -149,7 +152,7 @@ public class MapPanel extends JPanel
 		 * Drawing the map -
 		 */
 		this.drawMap(g);
-		//this.markBlocks(g);
+		//this.markBlocks(g); // (Debug mode) 
 
 		/**
 		 * Drawing the characters -

@@ -1,7 +1,5 @@
 package characters;
-
 import java.awt.Graphics;
-
 import map.Map;
 
 /**
@@ -93,7 +91,10 @@ public class GameCharacter extends LivingObject
 	{
 		this._isGravityApplied = val;
 	}
-
+	
+	/**
+	 * Method - The way the game character implements the gravity interface
+	 */
 	@Override
 	public void applyGravity()
 	{
@@ -209,7 +210,10 @@ public class GameCharacter extends LivingObject
 	{
 		return _isCollided;
 	}
-
+	
+	/**
+	 * Method - Set the current state of collision with terrain.
+	 */
 	@Override
 	public void setCollidedState(boolean val)
 	{
@@ -223,6 +227,12 @@ public class GameCharacter extends LivingObject
 
 	public void drawCharacter(Graphics g)
 	{
-		this._animator.drawCharacter(g, this._isRight, this._objBox.x, this._objBox.y);
+		this._animator.drawCurrFrame(g, this._isRight, this._objBox.x, this._objBox.y);
+	}
+
+	@Override
+	public void update()
+	{
+		this.setMovement();
 	}
 }
