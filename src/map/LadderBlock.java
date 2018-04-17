@@ -2,9 +2,9 @@ package map;
 
 import characters.CharacterState;
 import characters.GameCharacter;
-import characters.PlayerKeyListener;
+import characters.LivingObject;
 
-public class LadderBlock extends ObjectBlock
+public class LadderBlock extends Block
 {
 	private final int _initialPositioning = 4;
 	private boolean _initializer;
@@ -16,23 +16,29 @@ public class LadderBlock extends ObjectBlock
 	}
 
 	@Override
-	public void affectLivingObj(GameCharacter gc)
+	public void affectLivingObj(LivingObject obj)
 	{
-		if (PlayerKeyListener.getPressedKeys()[PlayerKeyListener.KEY_UP]) // The character is willing to climb
+		if (obj instanceof GameCharacter)
 		{
-			if (gc.getCurrState() != CharacterState.Climbing) // Getting on ladder
+			GameCharacter gc = (GameCharacter)obj;
+			if (gc.isWillingToClimb()) // The character is willing to climb
 			{
-				if (this._initializer)
+				if (gc.getCurrState() != CharacterState.Climbing) // Getting on ladder
 				{
-					gc.setCollidedState(false);
-					gc.setCurrState(CharacterState.Climbing);
-					gc.setPosition(this._x, gc.getObjBox().y - _initialPositioning);
+					if (this._initializer)
+					{
+						gc.setCollidedState(false);
+						gc.stopHorizontalMovement();
+						gc.setCurrState(CharacterState.Climbing);
+						gc.setPosition(this.getX(), gc.getObjBox().y - _initialPositioning);
+					}
+					return;
 				}
-				return;
-			}
-			else // Mid-climbing. Lift the character as needed.
-			{
-				gc.setPosition(this._x, gc.getObjBox().y - gc.getClimbingSpeed());
+				else // Mid-climbing. Lift the character as needed.
+				{
+					gc.setPosition(this.getX(), gc.getObjBox().y - gc.getClimbingSpeed());
+				}
+				obj.setLastFeetBlock(obj.getFeetBlock());
 			}
 		}
 	}

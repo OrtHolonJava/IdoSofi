@@ -1,5 +1,4 @@
 package characters;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -7,67 +6,50 @@ public class PlayerKeyListener implements KeyListener
 {
 	private GameCharacter _char;
 	private static boolean[] _pressedKeys;
-	public static final int KEY_LEFT = 0, KEY_RIGHT = 1, KEY_UP = 2, CONTINUOUS_INPUT_KEYS = 3;
 
 	public PlayerKeyListener(GameCharacter ch)
 	{
 		this._char = ch;
-		_pressedKeys = new boolean[CONTINUOUS_INPUT_KEYS];
+		_pressedKeys = new boolean[525]; // 525 - Number of keycodes.
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-		{
-			_pressedKeys[KEY_LEFT] = true;
-		}
-
-		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-		{
-			_pressedKeys[KEY_RIGHT] = true;
-		}
-		
-		else if (e.getKeyCode() == KeyEvent.VK_UP)
-		{
-			_pressedKeys[KEY_UP] = true;
-		}
+		_pressedKeys[e.getKeyCode()] = true;
 
 		/**
 		 * Handle momentary input -
 		 */
-		if (e.getKeyCode() == KeyEvent.VK_Z)
+		switch (e.getKeyCode())
 		{
-			this._char.jump();
-		}
-
+			case KeyEvent.VK_Z:
+				this._char.jump();
+				break;
+			
+			case KeyEvent.VK_UP:
+				this._char.setWillingToClimb(true);
+				break;
+		}	
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		/**
-		 * Stop walking - 
-		 */
-		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-		{
-			_pressedKeys[KEY_LEFT] = false;
-			this._char.stopWalking();
-		}
-
-		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-		{
-			_pressedKeys[KEY_RIGHT] = false;
-			this._char.stopWalking();
-		}
+		_pressedKeys[e.getKeyCode()] = false;
 		
 		/**
-		 * Stop climbing;
+		 * Handle momentary input -
 		 */
-		else if (e.getKeyCode() == KeyEvent.VK_UP)
-		{
-			_pressedKeys[KEY_UP] = false;
-			this._char.stopClimbing();
+		switch (e.getKeyCode())
+		{								
+			case KeyEvent.VK_RIGHT:
+				this._char.stopWalking();
+				break;
+				
+			case KeyEvent.VK_LEFT:
+				this._char.stopWalking();
+				break;
 		}
 	}
 
@@ -79,11 +61,11 @@ public class PlayerKeyListener implements KeyListener
 		/**
 		 * Walking -
 		 */
-		if (_pressedKeys[KEY_LEFT])
+		if (_pressedKeys[KeyEvent.VK_LEFT])
 		{
 			this._char.walkLeft();
 		}
-		else if (_pressedKeys[KEY_RIGHT])
+		else if (_pressedKeys[KeyEvent.VK_RIGHT])
 		{
 			this._char.walkRight();
 		}
@@ -92,7 +74,6 @@ public class PlayerKeyListener implements KeyListener
 	@Override
 	public void keyTyped(KeyEvent arg0)
 	{
-
 	}
 	
 	public static boolean[] getPressedKeys()

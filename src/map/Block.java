@@ -1,11 +1,13 @@
 package map;
 
+import characters.LivingObject;
+
 /**
  * The Block Class -
  */
 public abstract class Block
 {
-	protected int _tile, _x, _y;
+	private int _tile, _x, _y;
 	
 	/**
 	 * The Constructor Method - Receives values for each attribute and
@@ -30,13 +32,49 @@ public abstract class Block
 	{
 		return this._tile;
 	}
-
+	
 	/**
-	 * The toString Method
+	 * Abstract Method - The effect a collision with the block causes. 
+	 * Each variation of block implements it in its own way.
+	 * 
+	 * @param obj
+	 */
+	public abstract void affectLivingObj(LivingObject obj);
+	
+	/**
+	 * The toString Method -
 	 */
 	@Override
 	public String toString()
 	{
 		return "Tile: " + this._tile;
+	}
+
+	/**
+	 * Getters and Setters -
+	 */
+	public int getX()
+	{
+		return _x;
+	}
+
+	public void setX(int x)
+	{
+		_x = x;
+	}
+
+	public int getY()
+	{
+		return _y;
+	}
+
+	public void setY(int y)
+	{
+		_y = y;
+	}
+
+	public void setTile(int tile)
+	{
+		_tile = tile;
 	}
 }

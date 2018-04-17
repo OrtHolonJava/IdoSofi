@@ -15,7 +15,9 @@ public class GameLoop implements Runnable
 			_timeBetweenRenders = 1000000000 / _targetFPS;
 	
 	private final int _maxUpdatesBeforeRender = 1;
-
+	
+	private static int _currentFPS;
+	
 	public GameLoop(MapPanel panel)
 	{
 		this._gamePanel = panel;
@@ -65,7 +67,7 @@ public class GameLoop implements Runnable
 			int thisSecond = (int) (lastUpdateTime / 1000000000);
 			if (thisSecond > lastSecondTime)
 			{
-				//System.out.println("FPS: " + frameCount);
+				_currentFPS = frameCount;
 				frameCount = 0;
 				lastSecondTime = thisSecond;
 			}
@@ -76,14 +78,14 @@ public class GameLoop implements Runnable
 			 */
 			while (now - lastRenderTime < _timeBetweenRenders && now - lastUpdateTime < _timeBetweenUpdates)
 			{
-				Thread.yield(); //Yield until it has been at least the target time between renders. This saves the CPU from hogging.
+				//Thread.yield(); //Yield until it has been at least the target time between renders. This saves the CPU from hogging.
 				
 				/**
 				 * Preventing over-consumption of the system's CPU power.
 				 */
 				try
 				{
-					Thread.sleep(1);
+					//Thread.sleep(1);
 				}
 				catch (Exception e)
 				{
@@ -95,7 +97,10 @@ public class GameLoop implements Runnable
 
 	private void render()
 	{
-		SwingUtilities.invokeLater(() -> _gamePanel.repaint());
+		//SwingUtilities.invokeLater(() -> _gamePanel.paintImmediately(_gamePanel.getBounds()));
+		//_gamePanel.paintImmediately(_gamePanel.getBounds());
+		//SwingUtilities.invokeLater(() -> _gamePanel.repaint());
+		_gamePanel.repaint();
 	}
 
 	private void tick()
@@ -108,5 +113,10 @@ public class GameLoop implements Runnable
 		this._gameThread = new Thread(this);
 		_gameThread.setDaemon(true);
 		this._gameThread.start();
+	}
+	
+	public static int getCurrentFPS()
+	{
+		return _currentFPS;
 	}
 }

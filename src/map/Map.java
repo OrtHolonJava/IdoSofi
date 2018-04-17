@@ -1,29 +1,40 @@
 package map;
-
+import java.awt.Point;
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import bot.Dijkstra;
+import bot.Graph;
+import bot.Vertex;
 
 /**
  * The Map Class -
+ * Instances represent the logical aspect of each map in the game.
  */
 public class Map
 {
-	public static final int _blockSize = 30;
-	private int _sizeW, _sizeH;
-	private int _counter = 0;
-
-	// Each cell value represents the tile image that should be drawn at its
-	// area (graphical purpose).
-	// Each node represents an 'actual' block in the map (logical purpose).
-	private HashMap<Integer, TerrainBlock> _terrainHashMap;
-	private HashMap<Integer, ObjectBlock> _objHashMap;
-
+	public static final int _blockSize = 30, _sizeW = 80, _sizeH = 80;
+	private static final int _ladderTiles = 3, _spikeTile = 4;
+	
+	private HashMap<BlockMapKey, Block> _blockHashMap;
+	private ScrollPortal _playerPortal, _enemyPortal; // The scroll portals of the map.
+	
+	/**
+	 * Spawn areas. Integers represent block ID's. 
+	 */
+	private int _playerCharacterSpawnPoint;
+	private LinkedList<Integer> _enemyCharacterSpawnPoints;
+	private LinkedList<Integer> _monsterSpawnPoints;
+	private Graph _mapGraph;
+	
+	private int _counter = 0; // Used when scanning XML file.
+	
 	/**
 	 * The Constructor Method - Initializes an instance of the Map class. Sets the
 	 * map's terrain and objects matrix in accordance to the given XML files.
@@ -33,14 +44,16 @@ public class Map
 	 * @param terrainXmlFileName
 	 * @param objXmlFileName
 	 */
-	public Map(int size, int sizeW, String terrainXmlFileName, String objXmlFileName)
+	public Map(String terrainXmlFileName, String objXmlFileName)
 	{
-		// this._mapMatrix = new Block[size][sizeW];
-		this._terrainHashMap = new HashMap<Integer, TerrainBlock>();
-		this._objHashMap = new HashMap<Integer, ObjectBlock>();
-		this._sizeW = sizeW;
-		this._sizeH = size;
-
+		this._blockHashMap = new HashMap<BlockMapKey, Block>();
+		
+		/**
+		 * Initializing graph -
+		 */
+		this._mapGraph = new Graph();
+		Dijkstra.setGraph(_mapGraph);
+		
 		/**
 		 * Reading the map's XML file and extracting its data to the matrices.
 		 */
@@ -66,7 +79,11 @@ public class Map
 		{
 			System.out.println(e.getMessage());
 		}
-
+		
+		/**
+		 * Graph and map are now built. Time to form the edges - 
+		 */
+		this._mapGraph.bulidEdges();
 	}
 
 	/**
@@ -77,6 +94,9 @@ public class Map
 	 */
 	private void readNode(NodeList nodeList, BlockType mode)
 	{
+		int tileNo;
+		Point blockPoint;
+		
 		for (int count = 0; count < nodeList.getLength(); count++)
 		{
 			Node tempNode = nodeList.item(count);
@@ -90,17 +110,28 @@ public class Map
 					for (int i = 0; i < nodeMap.getLength(); i++)
 					{
 						Node node = nodeMap.item(i);
-						if (Integer.parseInt(node.getNodeValue()) != 0)
+						tileNo = Integer.parseInt(node.getNodeValue());
+						blockPoint = blockIDToPoint(_counter);
+						if (tileNo != 0)
 						{
 							if (mode == BlockType.Terrain)
 							{
-								this._terrainHashMap.put(_counter, new TerrainBlock(Integer.parseInt(node.getNodeValue()), _counter % this._sizeW * _blockSize, _counter / this._sizeW * _blockSize, Integer.parseInt(node.getNodeValue()) <= 5));
-							}
-							else
-							{
-								if (Integer.parseInt(node.getNodeValue()) <= 3) // The current object block code represents a LADDER block
+								this._blockHashMap.put(new BlockMapKey(_counter, mode), new TerrainBlock(tileNo, blockPoint.x, blockPoint.y, tileNo <= MapPanel._terrainTSWidth));
+								if (tileNo <= MapPanel._terrainTSWidth) // If the block is a floor block, it has to be added to the graph.
 								{
-									this._objHashMap.put(_counter, new LadderBlock(Integer.parseInt(node.getNodeValue()), _counter % this._sizeW * _blockSize, _counter / this._sizeW *_blockSize, Integer.parseInt(node.getNodeValue()) != 1));
+									this._mapGraph.addToGraph(new Vertex(_counter, tileNo, tileNo == 1 || tileNo == MapPanel._terrainTSWidth, mode), _counter);
+								}
+							}
+							else if (mode == BlockType.Object) // Block type - object block.
+							{
+								if (tileNo <= _ladderTiles) // The current object block code represents a LADDER block
+								{
+									this._blockHashMap.put(new BlockMapKey(_counter, mode), new LadderBlock(tileNo, blockPoint.x, blockPoint.y, tileNo > 1));
+									this._mapGraph.addToGraph(new Vertex(_counter, tileNo, false, mode), _counter); // Every ladder block is also a graph vertex.
+								}
+								else if (tileNo == _spikeTile)
+								{
+									this._blockHashMap.put(new BlockMapKey(_counter, mode), new SpikeBlock(tileNo, blockPoint.x, blockPoint.y));
 								}
 							}
 						}
@@ -115,37 +146,62 @@ public class Map
 			}
 		}
 	}
-
+	
+	public static int pointToBlockID(Point p)
+	{
+		return p.x / _blockSize + p.y / _blockSize * _sizeW;
+	}
+	
+	public static Point blockIDToPoint(int id)
+	{
+		return new Point(id % _sizeW * _blockSize, id / _sizeW * _blockSize);
+	}
+	
 	/**
 	 * Getters and Setters:
 	 */
-	public HashMap<Integer, TerrainBlock> getTerrainHashMap()
+	public HashMap<BlockMapKey, Block> getBlockHashMap()
 	{
-		return _terrainHashMap;
+		return this._blockHashMap;
+	}
+	
+	public ScrollPortal getPlayerPortal()
+	{
+		return _playerPortal;
 	}
 
-	public void setTerrainHashMap(HashMap<Integer, TerrainBlock> terrainHashMap)
+	public void setPlayerPortal(ScrollPortal playerPortal)
 	{
-		_terrainHashMap = terrainHashMap;
+		_playerPortal = playerPortal;
 	}
 
-	public HashMap<Integer, ObjectBlock> getObjHashMap()
+	public ScrollPortal getEnemyPortal()
 	{
-		return _objHashMap;
+		return _enemyPortal;
 	}
 
-	public void setObjHashMap(HashMap<Integer, ObjectBlock> objHashMap)
+	public void setEnemyPortal(ScrollPortal enemyPortal)
 	{
-		_objHashMap = objHashMap;
+		_enemyPortal = enemyPortal;
+	}
+	
+	public Graph getGraph()
+	{
+		return this._mapGraph;
 	}
 
-	public int getMapWidth()
+	public int getPlayerCharacterSpawnPoint()
 	{
-		return this._sizeW;
+		return _playerCharacterSpawnPoint;
 	}
 
-	public int getMapHeight()
+	public LinkedList<Integer> getEnemyCharacterSpawnPoints()
 	{
-		return this._sizeH;
+		return _enemyCharacterSpawnPoints;
+	}
+
+	public LinkedList<Integer> getMonsterSpawnPoints()
+	{
+		return _monsterSpawnPoints;
 	}
 }

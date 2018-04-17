@@ -1,37 +1,49 @@
 package characters;
-import java.awt.Graphics;
-import map.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import animation.CharacterAnimator;
 
 /**
  * The GameCharacter Class - Represents the main character of the game -
  */
 public class GameCharacter extends LivingObject
 {
-	private boolean _isRight, _isCollided;
-	private CharacterState _currState;
 	private int _charID;
-	private CharacterAnimator _animator;
-
+	private boolean _willingToClimb;
+	private List<GameCharacterListener> _listeners;
+	
 	/**
 	 * Character's stats -
 	 */
-	private final int _walkingSpeed = 4, _flyingSpeed = 3, _climbingSpeed = 3, _jumpingHeight = 18;
+	public static final int _charBoxWidth = 30, _charBoxHeight = 65;
+	public static final int _walkingSpeed = 4, _flyingSpeed = 3, _climbingSpeed = 3, _jumpingHeight = 17;
 
 	public GameCharacter(int x, int y, int width, int height, int id)
 	{
 		super(x, y, width, height);
 		this._charID = id;
+		this._listeners = new ArrayList<GameCharacterListener>();
+		
+		/**
+		 * Setting defaultive settings -
+		 */
 		this._isRight = this._isGravityApplied = true;
-		this._isCollided = false;
+		this._isCollided = this._willingToClimb = false;
 		this._movementX = 0;
 		this._movementY = 0;
 		this._animator = new CharacterAnimator(this._charID);
-		this.setCurrState(CharacterState.Falling); // (Defaultive)
+		this.setCurrState(CharacterState.Falling);
 	}
-
+	
+	public void addListener(GameCharacterListener lis)
+	{
+		this._listeners.add(lis);
+	}
+	
 	public void walkRight()
 	{
-		if (this._currState != CharacterState.Climbing)
+		if (this.getCurrState() != CharacterState.Climbing)
 		{
 			this._isRight = true;
 			if (this._isCollided)
@@ -48,7 +60,7 @@ public class GameCharacter extends LivingObject
 
 	public void walkLeft()
 	{
-		if (this._currState != CharacterState.Climbing)
+		if (this.getCurrState() != CharacterState.Climbing)
 		{
 			this._isRight = false;
 			if (this._isCollided)
@@ -65,25 +77,16 @@ public class GameCharacter extends LivingObject
 
 	public void jump()
 	{
-		if (this._isCollided && this._currState != CharacterState.Climbing)
+		if (this._isCollided && this.getCurrState() != CharacterState.Climbing)
 		{
 			this._movementY = -_jumpingHeight;
 			this._isCollided = false;
 		}
 	}
-
+	
 	public CharacterState getCurrState()
 	{
-		return _currState;
-	}
-
-	public void setCurrState(CharacterState currState)
-	{
-		if (!currState.equals(this._currState))
-		{
-			_currState = currState;
-			this._animator.setState(currState);
-		}
+		return CharacterState.values()[this._currState];
 	}
 
 	@Override
@@ -98,7 +101,7 @@ public class GameCharacter extends LivingObject
 	@Override
 	public void applyGravity()
 	{
-		if (this._isCollided || this._currState == CharacterState.Climbing)
+		if (this._isCollided || this.getCurrState() == CharacterState.Climbing) // Collided or not prone to gravity.
 		{
 			this._movementY = 0;
 			this._isGravityApplied = false;
@@ -108,7 +111,7 @@ public class GameCharacter extends LivingObject
 			this._isGravityApplied = true;
 			if (this._movementY < Gravity._maxGForce)
 			{
-				this._movementY += 1;
+				this._movementY++;
 			}
 			this.setCurrState(CharacterState.Falling);
 		}
@@ -141,6 +144,8 @@ public class GameCharacter extends LivingObject
 		if (this._isCollided)
 		{
 			this.setCurrState(CharacterState.Standing);
+			this.stopClimbing();
+			this.setWillingToClimb(false);
 		}
 		else
 		{
@@ -148,67 +153,23 @@ public class GameCharacter extends LivingObject
 		}
 	}
 	
+	@Override
 	public void stopWalking()
 	{
-		if (this._currState == CharacterState.Walking || this._currState == CharacterState.Falling)
+		if (this.getCurrState() == CharacterState.Walking || this.getCurrState() == CharacterState.Falling || this.getCurrState() == CharacterState.Standing) // Character is walking
 		{
-			this.deEffectMovement();
 			this.stopHorizontalMovement();
+			this.deEffectMovement();
 		}
 	}
 	
 	public void stopClimbing()
 	{
-		if (this._currState == CharacterState.Climbing)
+		if (this.getCurrState() == CharacterState.Climbing)
 		{
 			this.deEffectMovement();
 			this.stopVerticalMovement();
 		}
-	}
-	
-	/**
-	 * Method - Returns the map cell ID in which the character's feet are located.
-	 */
-	public int getFeetBlock(int mapWidth)
-	{
-		return (this._objBox.x + Map._blockSize / 2) / Map._blockSize + (this._objBox.y + this._objBox.height) / Map._blockSize * mapWidth;
-	}
-
-	/**
-	 * Method - Returns the map cell ID in which the character's head is located.
-	 */
-	public int getHeadBlock(int mapWidth)
-	{
-		return (this._objBox.x + Map._blockSize / 2) / Map._blockSize + this._objBox.y / Map._blockSize * mapWidth;
-	}
-	
-	/**
-	 * Method - Returns the map cell ID in which the character's head is located.
-	 */
-	public int getMidBlock(int mapWidth)
-	{
-		return (this._objBox.x + Map._blockSize / 2) / Map._blockSize + (this._objBox.y + this._objBox.height - Map._blockSize) / Map._blockSize * mapWidth;
-	}
-	
-	
-	public int getClimbingSpeed()
-	{
-		return this._climbingSpeed;
-	}
-	
-	public boolean isRight()
-	{
-		return _isRight;
-	}
-
-	public void setRight(boolean isRight)
-	{
-		_isRight = isRight;
-	}
-
-	public boolean isCollided()
-	{
-		return _isCollided;
 	}
 	
 	/**
@@ -217,22 +178,41 @@ public class GameCharacter extends LivingObject
 	@Override
 	public void setCollidedState(boolean val)
 	{
+		if (val && this._movementY < 0)
+		{
+			return;
+		}
 		if (this._isCollided == false && val) // If the character has just landed.
 		{
 			this._isCollided = val;
 			this.deEffectMovement();
+			return;
 		}
 		this._isCollided = val;
 	}
 
-	public void drawCharacter(Graphics g)
+	public boolean isWillingToClimb()
 	{
-		this._animator.drawCurrFrame(g, this._isRight, this._objBox.x, this._objBox.y);
+		return _willingToClimb;
 	}
 
+	public void setWillingToClimb(boolean willingToClimb)
+	{
+		_willingToClimb = willingToClimb;
+	}
+	
+	public int getClimbingSpeed()
+	{
+		return _climbingSpeed;
+	}
+	
 	@Override
 	public void update()
 	{
-		this.setMovement();
+		super.update();
+		for (int i = 0; i < this._listeners.size(); i++)
+		{
+			this._listeners.get(i).playerMoved(this);
+		}
 	}
 }

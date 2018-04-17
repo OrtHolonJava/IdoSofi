@@ -1,5 +1,6 @@
 package map;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 
 /**
  * The MapFrame Class - 
@@ -8,13 +9,14 @@ public class MapFrame extends JFrame implements MenuPanelListener
 {
 	private MenuPanel _menuPanel;
 	private MapPanel _mapPanel;
+	private UIPanel _uiPanel;
 	private GameLoop _gameLoop;
 	
 	/**
 	 * The Constructor Method: 
 	 * Initializes an instance of the class.
 	 */
-	public MapFrame(int mapID ,int rows, int cols)
+	public MapFrame()
 	{
 		this.setTitle("Link's Scrolls");
 		
@@ -50,11 +52,17 @@ public class MapFrame extends JFrame implements MenuPanelListener
 	public void mapHasBeenChosen(int mapID)
 	{
 		removeMainMenu();
-		
-		this._mapPanel = new MapPanel(mapID, 40, 69); // TEMP
+		this._mapPanel = new MapPanel(mapID); // TEMP
 		add(this._mapPanel);
 		this._mapPanel.requestFocusInWindow();
 		revalidate();
+		
+		/**
+		 * Setting up the Game UI -
+		 */
+		this._uiPanel = new UIPanel();
+		this.setGlassPane(this._uiPanel);
+		this.getGlassPane().setVisible(true);
 		
 		_gameLoop = new GameLoop(this._mapPanel);
 		startGame();
